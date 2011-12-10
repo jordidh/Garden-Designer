@@ -79,4 +79,24 @@ public class CropGraphic extends Image /*Rectangle*/ {
 	public PlantEntity getPlantEntity() {
 		return m_plant;
 	}
+	
+	public void Zoom(int zoom)
+	{
+		if (zoom == 0) zoom = 1;
+		
+		if (zoom >= 0)
+		{
+			super.setX(getCropEntity().getPointX() * zoom);
+			super.setY(getCropEntity().getPointY() * zoom);
+			super.setWidth(getPlantEntity().getWidthSpacing() * zoom);
+			super.setHeight(getPlantEntity().getHeightSpacing() * zoom);
+		}
+		else
+		{
+			super.setX(getCropEntity().getPointX() / Math.abs(zoom));
+			super.setY(getCropEntity().getPointY() / Math.abs(zoom));
+			super.setWidth(getPlantEntity().getWidthSpacing() / Math.abs(zoom));
+			super.setHeight(getPlantEntity().getHeightSpacing() / Math.abs(zoom));
+		}
+	}
 }

@@ -3,6 +3,8 @@ package com.curba.zonedesigner.client;
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Image;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -11,6 +13,7 @@ public class GardenGraphic extends DrawingArea {
 	private GardenTypeEntity m_gardenType;
 	private GardenEntity m_entity;
 	List<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
+	private int m_zoom = 0;
 	
 	private Image m_backGround;
 	
@@ -83,8 +86,8 @@ public class GardenGraphic extends DrawingArea {
 			}
 		}
 	}
-
-	public void Draw()
+	
+	public void InitializeComponents()
 	{
 		for(int i=0; i<m_zones.size(); i++)
 		{
@@ -93,6 +96,49 @@ public class GardenGraphic extends DrawingArea {
 			{
 				this.add(m_zones.get(i).getCrops().get(j));
 			}
+		}
+	}
+	
+	public void ReZoom(int zoomModifier)
+	{
+		//Window.alert(Integer.toString(zoomModifier));
+		
+		if (m_zoom <= 1 && m_zoom >= -1)
+		{
+			if (zoomModifier < 0) m_zoom = -1 + zoomModifier;
+			else m_zoom = 1 + zoomModifier;
+		}
+		else
+		{
+			m_zoom = m_zoom + zoomModifier;
+		}
+				
+		for(int i=0; i<m_zones.size(); i++)
+		{
+			for(int j=0; j<m_zones.get(i).getCrops().size(); j++)
+			{
+				m_zones.get(i).getCrops().get(j).Zoom(m_zoom);
+			}
+			m_zones.get(i).Zoom(m_zoom);
+		}
+		Zoom(m_zoom);
+	}
+	
+	public void Zoom(int zoom)
+	{
+		//Window.alert(Integer.toString(zoom));
+		
+		if (zoom == 0) zoom = 1;
+		
+		if (zoom >= 0)
+		{
+			super.setWidth(getGardenEntity().getWidth() * zoom);
+			super.setHeight(getGardenEntity().getHeight() * zoom);
+		}
+		else
+		{
+			super.setWidth(getGardenEntity().getWidth() / Math.abs(zoom));
+			super.setHeight(getGardenEntity().getHeight() / Math.abs(zoom));
 		}
 	}
 }

@@ -61,4 +61,24 @@ public class ZoneGraphic extends Image /*DrawingArea*/ {
 		//m_backGround.setWidth(getZoneEntity().getWidth());
 		//m_backGround.setHeight(getZoneEntity().getHeigh());
 	}
+	
+	public void Zoom(int zoom)
+	{
+		if (zoom == 0) zoom = 1;
+		
+		if (zoom >= 0)
+		{
+			super.setX(getZoneEntity().getInitialPointX() * zoom);
+			super.setY(getZoneEntity().getInitialPointY() * zoom);
+			super.setWidth(getZoneEntity().getWidth() * zoom);
+			super.setHeight(getZoneEntity().getHeigh() * zoom);
+		}
+		else
+		{
+			super.setX(getZoneEntity().getInitialPointX() / Math.abs(zoom));
+			super.setY(getZoneEntity().getInitialPointY() / Math.abs(zoom));
+			super.setWidth(getZoneEntity().getWidth() / Math.abs(zoom));
+			super.setHeight(getZoneEntity().getHeigh() / Math.abs(zoom));
+		}
+	}
 }

@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -51,6 +52,12 @@ public class GardenDesigner implements EntryPoint {
 	private JsArray<ZoneEntity> m_Zones = null;
 	private JsArray<ZoneTypeEntity> m_ZoneTypes = null;
 	private JsArray<GardenEntity> m_Gardens = null;
+	
+	//Garden designer controls
+	final FlowPanel m_pnlControls = new FlowPanel(); 
+	final Label m_lblZoom = new Label();
+	final Button m_btnZoomOut = new Button("Zoom -");
+	final Button m_btnZoomIn = new Button("Zoom +");
 		
 	// Convert the string of JSON into JavaScript object.
 	private final native JsArray<GardenEntity> asArrayOfGardenEntity(String json) /*-{
@@ -91,7 +98,7 @@ public class GardenDesigner implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	public void onModuleLoad() {
+	public void onModuleLoad() {	
 		//Load the initial values from hidden elements
 		String parPlants = DOM.getElementAttribute(DOM.getElementById("parPlants"), "value");
 		m_Plants = asArrayOfPlantEntity(parPlants.replace("%2C", ",").replace("&quot;", "\""));
@@ -127,7 +134,7 @@ public class GardenDesigner implements EntryPoint {
 		
 		//Window.alert(parZones.replace("%2C", ",").replace("&quot;", "\""));
 		
-		//Creates the ZoneGraphics
+		//Loads zones and crops to the garden
 		for(int i=0; i<m_Zones.length(); i++)
 		{
 			ZoneGraphic z = new ZoneGraphic(m_Zones.get(i), m_Garden);
@@ -159,11 +166,23 @@ public class GardenDesigner implements EntryPoint {
 			
 			m_Garden.getZones().add(z);
 		}
+		m_Garden.InitializeComponents();
 		
+		//Creates the controls of the designer
+		m_pnlControls.setSize("500", "100");
+		m_btnZoomIn.setTitle("In");
+		m_btnZoomIn.addClickHandler(new ZoomClickHandler(m_Garden));
+		m_btnZoomOut.setTitle("Out");
+		m_btnZoomOut.addClickHandler(new ZoomClickHandler(m_Garden));
+		m_lblZoom.setText("Zoom");
+		m_pnlControls.add(m_btnZoomIn);
+		m_pnlControls.add(m_lblZoom);
+		m_pnlControls.add(m_btnZoomOut);
+		RootPanel.get("ajaxGardenControls").add(m_pnlControls);
 		//Sets the control in the div named "ajaxGardenEditor"
 		RootPanel.get("ajaxGardenEditor").add(m_Garden);
 		
-		m_Garden.Draw();
+		
 		
 		//Window.alert("Ok");
 		
