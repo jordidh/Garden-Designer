@@ -55,10 +55,25 @@ public class GardenDesigner implements EntryPoint {
 	
 	//Garden designer controls
 	final FlowPanel m_pnlControls = new FlowPanel(); 
-	final Label m_lblZoom = new Label();
+	//final Label m_lblZoom = new Label();
 	final Button m_btnZoomOut = new Button("Zoom -");
 	final Button m_btnZoomIn = new Button("Zoom +");
+	
+	final Button m_btnCropNew = new Button("Crop +");
+	final Button m_btnCropDelete = new Button("Crop -");
+	final Button m_btnCropProperties = new Button("Crop =");
+	final Button m_btnCropPrune = new Button("Crop prune");
+	final Button m_btnCropCollect = new Button("Crop collect");
 		
+	final Button m_btnZoneNew = new Button("Zone +");
+	final Button m_btnZoneDelete = new Button("Zone -");
+	final Button m_btnZoneProperties = new Button("Zone =");
+	final Button m_btnZoneWatering = new Button("Zone watering");
+
+	final Button m_btnGardenProperties = new Button("Garden =");
+	
+	final Button m_btnSave = new Button("Save");
+	
 	// Convert the string of JSON into JavaScript object.
 	private final native JsArray<GardenEntity> asArrayOfGardenEntity(String json) /*-{
 		return eval(json);
@@ -169,14 +184,47 @@ public class GardenDesigner implements EntryPoint {
 		m_Garden.InitializeComponents();
 		
 		//Creates the controls of the designer
-		m_pnlControls.setSize("500", "100");
-		m_btnZoomIn.setTitle("In");
-		m_btnZoomIn.addClickHandler(new ZoomClickHandler(m_Garden));
-		m_btnZoomOut.setTitle("Out");
-		m_btnZoomOut.addClickHandler(new ZoomClickHandler(m_Garden));
-		m_lblZoom.setText("Zoom");
+		//m_pnlControls.setSize("500", "100");
+		m_btnCropNew.setTitle("CropNew");
+		m_btnCropNew.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnCropDelete.setTitle("CropDelete");
+		m_btnCropDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnCropProperties.setTitle("CropProps");
+		m_btnCropProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnCropPrune.setTitle("CropPrune");
+		m_btnCropPrune.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnCropCollect.setTitle("CropCollect");
+		m_btnCropCollect.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnZoneNew.setTitle("ZoneNew");
+		m_btnZoneNew.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnZoneDelete.setTitle("ZoneDelete");
+		m_btnZoneDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnZoneProperties.setTitle("ZoneProps");
+		m_btnZoneProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnZoneWatering.setTitle("ZoneWatering");
+		m_btnZoneWatering.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnGardenProperties.setTitle("GardenProps");
+		m_btnGardenProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnSave.setTitle("Save");
+		m_btnSave.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnZoomIn.setTitle("ZoomIn");
+		m_btnZoomIn.addClickHandler(new ToolbarClickHandler(m_Garden));
+		m_btnZoomOut.setTitle("ZoomOut");
+		m_btnZoomOut.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		//Adds the controls to the panel
+		m_pnlControls.add(m_btnCropNew);
+		m_pnlControls.add(m_btnCropDelete);
+		m_pnlControls.add(m_btnCropProperties);
+		m_pnlControls.add(m_btnCropPrune);
+		m_pnlControls.add(m_btnCropCollect);
+		m_pnlControls.add(m_btnZoneNew);
+		m_pnlControls.add(m_btnZoneDelete);
+		m_pnlControls.add(m_btnZoneProperties);
+		m_pnlControls.add(m_btnZoneWatering);
+		m_pnlControls.add(m_btnGardenProperties);
+		m_pnlControls.add(m_btnSave);
 		m_pnlControls.add(m_btnZoomIn);
-		m_pnlControls.add(m_lblZoom);
 		m_pnlControls.add(m_btnZoomOut);
 		RootPanel.get("ajaxGardenControls").add(m_pnlControls);
 		//Sets the control in the div named "ajaxGardenEditor"
