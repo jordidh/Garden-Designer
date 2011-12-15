@@ -1,0 +1,10 @@
+package com.curba.zonedesigner.client;
+
+public enum GardenAction {
+	NONE,
+	NEW_CROP, DELETE_CROP, PROPS_CROP, PRUNE_CROP, COLLECT_CROP,
+	NEW_ZONE, DELETE_ZONE, PROPS_ZONE, WATERING_ZONE, 
+	PROPS_GARDEN,
+	SAVE,
+	ZOOM_IN, ZOOM_OUT
+}

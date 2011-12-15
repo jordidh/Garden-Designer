@@ -8,6 +8,11 @@ public class GraphicObjectMouseMoveHandler implements MouseMoveHandler {
 
 	@Override
 	public void onMouseMove(MouseMoveEvent event) {
+		if (GardenDesigner.m_SelectedAction != GardenAction.NONE)
+		{
+			return;
+		}
+		
 		// TODO Auto-generated method stub
 		GardenGraphic garden = null;
 		

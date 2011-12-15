@@ -18,20 +18,68 @@ public class ToolbarClickHandler implements ClickHandler {
 		// TODO Auto-generated method stub
 		Button btn = (Button)event.getSource();
 		
-		//Window.alert(btn.getParent().getClass().getName());
-		
-		if (btn.getTitle().equals("ZoomIn"))
+		if (btn.getTitle().equals("CropNew"))
 		{
+			CropCreationDialog diag = new CropCreationDialog();
+			diag.ShowDialog();
+			//GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
+		}
+		else if (btn.getTitle().equals("CropDelete"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.DELETE_CROP;
+		}
+		else if (btn.getTitle().equals("CropProps"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.PROPS_CROP;
+		}
+		else if (btn.getTitle().equals("CropPrune"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.PRUNE_CROP;
+		}
+		else if (btn.getTitle().equals("CropCollect"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.COLLECT_CROP;
+		}
+		else if (btn.getTitle().equals("ZoneNew"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
+		}
+		else if (btn.getTitle().equals("ZoneDelete"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.DELETE_ZONE;
+		}
+		else if (btn.getTitle().equals("ZoneProps"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.PROPS_ZONE;
+		}
+		else if (btn.getTitle().equals("ZoneWatering"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.WATERING_ZONE;
+		}
+		else if (btn.getTitle().equals("GardenProps"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.PROPS_GARDEN;
+		}
+		else if (btn.getTitle().equals("Save"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.SAVE;
+		}
+		else if (btn.getTitle().equals("ZoomIn"))
+		{
+			GardenDesigner.m_SelectedAction = GardenAction.ZOOM_IN;
 			m_Garden.ReZoom(1);
+			GardenDesigner.m_SelectedAction = GardenAction.NONE;
 		}
 		else if (btn.getTitle().equals("ZoomOut"))
 		{
+			GardenDesigner.m_SelectedAction = GardenAction.ZOOM_OUT;
 			m_Garden.ReZoom(-1);
+			GardenDesigner.m_SelectedAction = GardenAction.NONE;
 		}
 		else
 		{
+			GardenDesigner.m_SelectedAction = GardenAction.NONE;
 			Window.alert(btn.getText() + ", " + btn.getTitle());
 		}
 	}
-
 }

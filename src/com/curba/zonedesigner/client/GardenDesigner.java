@@ -44,8 +44,9 @@ public class GardenDesigner implements EntryPoint {
 	{
 		return m_Garden;
 	}
+	static GardenAction m_SelectedAction = GardenAction.NONE;
 	
-	private JsArray<PlantEntity> m_Plants = null;
+	public static JsArray<PlantEntity> m_Plants = null;
 	private JsArray<CropEntity> m_Crops = null;
 	private JsArray<GardenTypeEntity> m_GardenTypes = null;
 	private JsArray<RegionEntity> m_Regions = null;
