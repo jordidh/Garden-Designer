@@ -3,7 +3,6 @@ package com.curba.zonedesigner.client;
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Image;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.user.client.Window;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,6 +13,26 @@ public class GardenGraphic extends DrawingArea {
 	private GardenEntity m_entity;
 	List<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
 	private int m_zoom = 0;
+	
+	private JsArray<CropEntity> m_EntityCrops = null;
+	public JsArray<CropEntity> getEntityCrops()
+	{
+		return m_EntityCrops;
+	}
+	public void setEntityCrops(JsArray<CropEntity> entities)
+	{
+		m_EntityCrops = entities;
+	}
+	
+	private JsArray<ZoneEntity> m_EntityZones = null;
+	public JsArray<ZoneEntity> getEntityZones()
+	{
+		return m_EntityZones;
+	}
+	public void setEntityZones(JsArray<ZoneEntity> entities)
+	{
+		m_EntityZones = entities;
+	}
 	
 	private Image m_backGround;
 	
@@ -86,7 +105,7 @@ public class GardenGraphic extends DrawingArea {
 			}
 		}
 	}
-	
+	/*
 	public void InitializeComponents()
 	{
 		for(int i=0; i<m_zones.size(); i++)
@@ -98,6 +117,7 @@ public class GardenGraphic extends DrawingArea {
 			}
 		}
 	}
+	*/
 	
 	public void ReZoom(int zoomModifier)
 	{
@@ -139,6 +159,57 @@ public class GardenGraphic extends DrawingArea {
 		{
 			super.setWidth(getGardenEntity().getWidth() / Math.abs(zoom));
 			super.setHeight(getGardenEntity().getHeight() / Math.abs(zoom));
+		}
+	}
+	
+	//Adds a crop
+	public void AddCrop(int id, int numPlants, int x, int y, PlantEntity p, ZoneGraphic z)
+	{
+		//m_EntityCrops.push(newEntity);
+		CropGraphic c = new CropGraphic(id, numPlants, x, y, p, z, this);
+		c.addMouseDownHandler(new GraphicObjectMouseDownHandler());
+		c.addMouseUpHandler(new GraphicObjectMouseUpHandler());
+		c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
+		z.getCrops().add(c);
+		this.add(c);
+	}
+	
+	//Adds a crop
+	public void CreateZonesAndCrops(JsArray<PlantEntity> plants)
+	{
+		//Loads zones and crops to the garden
+		for(int i=0; i<m_EntityZones.length(); i++)
+		{
+			ZoneGraphic z = new ZoneGraphic(m_EntityZones.get(i), this);
+			z.addMouseDownHandler(new GraphicObjectMouseDownHandler());
+			z.addMouseUpHandler(new GraphicObjectMouseUpHandler());
+			z.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
+			this.add(z);
+			
+			for(int j=0; j<m_EntityCrops.length(); j++)
+			{
+				if (m_EntityCrops.get(j).getZoneId() == m_EntityZones.get(i).getId())
+				{
+					//Search the plant of the crop
+					for(int k=0; k<plants.length(); k++)
+					{
+						if (plants.get(k).getId() == m_EntityCrops.get(j).getPlantId())
+						{
+							//Create a CropGraphic and add to the graphic zone
+							//CropGraphic c = new CropGraphic(m_EntityCrops.get(j), plants.get(k), z, this);
+							CropGraphic c = new CropGraphic(m_EntityCrops.get(j).getId(), m_EntityCrops.get(j).getNumPlants(), m_EntityCrops.get(j).getPointX(), m_EntityCrops.get(j).getPointY(), plants.get(k), z, this);
+							c.addMouseDownHandler(new GraphicObjectMouseDownHandler());
+							c.addMouseUpHandler(new GraphicObjectMouseUpHandler());
+							c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
+							z.getCrops().add(c);
+							this.add(c);
+							break;
+						}
+					}
+				}
+			}
+			
+			this.getZones().add(z);
 		}
 	}
 }

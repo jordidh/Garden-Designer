@@ -1,7 +1,6 @@
 package com.curba.zonedesigner.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 
 public class GardenEntity extends JavaScriptObject {
 	  // Overlay types always have protected, zero argument constructors.

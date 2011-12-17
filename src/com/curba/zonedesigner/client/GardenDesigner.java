@@ -1,35 +1,10 @@
 package com.curba.zonedesigner.client;
 
-import com.curba.zonedesigner.shared.ServerPlant;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.core.client.JsArray;
 //import com.google.gwt.i18n.client.NumberFormat;
 
@@ -47,10 +22,8 @@ public class GardenDesigner implements EntryPoint {
 	static GardenAction m_SelectedAction = GardenAction.NONE;
 	
 	public static JsArray<PlantEntity> m_Plants = null;
-	private JsArray<CropEntity> m_Crops = null;
 	private JsArray<GardenTypeEntity> m_GardenTypes = null;
 	private JsArray<RegionEntity> m_Regions = null;
-	private JsArray<ZoneEntity> m_Zones = null;
 	private JsArray<ZoneTypeEntity> m_ZoneTypes = null;
 	private JsArray<GardenEntity> m_Gardens = null;
 	
@@ -91,7 +64,7 @@ public class GardenDesigner implements EntryPoint {
 	private final native JsArray<PlantEntity> asArrayOfPlantEntity(String json) /*-{
 		return eval(json);
 	}-*/;
-	private final native JsArray<CropEntity> asArrayOfCropEntity(String json) /*-{
+	public final native static JsArray<CropEntity> asArrayOfCropEntity(String json) /*-{
 		return eval(json);
 	}-*/;
 	private final native JsArray<GardenTypeEntity> asArrayOfGardenTypeEntity(String json) /*-{
@@ -126,10 +99,6 @@ public class GardenDesigner implements EntryPoint {
 		m_Gardens = asArrayOfGardenEntity("[" + parGarden.replace("%2C", ",").replace("&quot;", "\"") + "]");
 		String parZoneTypes = DOM.getElementAttribute(DOM.getElementById("parZoneTypes"), "value");
 		m_ZoneTypes = asArrayOfZoneTypeEntity(parZoneTypes.replace("%2C", ",").replace("&quot;", "\""));		
-		String parZones = DOM.getElementAttribute(DOM.getElementById("parZones"), "value");
-		m_Zones = asArrayOfZoneEntity(parZones.replace("%2C", ",").replace("&quot;", "\""));
-		String parCrops = DOM.getElementAttribute(DOM.getElementById("parCrops"), "value");
-		m_Crops = asArrayOfCropEntity(parCrops.replace("%2C", ",").replace("&quot;", "\""));
 			
 		//Get the sizes of the control
 		String parWidth = DOM.getElementAttribute(DOM.getElementById("ajaxGardenEditor"), "width"); 
@@ -147,42 +116,16 @@ public class GardenDesigner implements EntryPoint {
 		m_Garden.addMouseDownHandler(new GraphicObjectMouseDownHandler());
 		m_Garden.addMouseUpHandler(new GraphicObjectMouseUpHandler());
 		m_Garden.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
+		String parZones = DOM.getElementAttribute(DOM.getElementById("parZones"), "value");
+		m_Garden.setEntityZones(asArrayOfZoneEntity(parZones.replace("%2C", ",").replace("&quot;", "\"")));
+		String parCrops = DOM.getElementAttribute(DOM.getElementById("parCrops"), "value");
+		m_Garden.setEntityCrops(asArrayOfCropEntity(parCrops.replace("%2C", ",").replace("&quot;", "\"")));
 		
 		//Window.alert(parZones.replace("%2C", ",").replace("&quot;", "\""));
 		
-		//Loads zones and crops to the garden
-		for(int i=0; i<m_Zones.length(); i++)
-		{
-			ZoneGraphic z = new ZoneGraphic(m_Zones.get(i), m_Garden);
-			z.addMouseDownHandler(new GraphicObjectMouseDownHandler());
-			z.addMouseUpHandler(new GraphicObjectMouseUpHandler());
-			z.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
-			
-			//Window.alert(parCrops.replace("%2C", ",").replace("&quot;", "\""));
-			for(int j=0; j<m_Crops.length(); j++)
-			{
-				if (m_Crops.get(j).getZoneId() == m_Zones.get(i).getId())
-				{
-					//Search the plant of the crop
-					for(int k=0; k<m_Plants.length(); k++)
-					{
-						if (m_Plants.get(k).getId() == m_Crops.get(j).getPlantId())
-						{
-							//Create a CropGraphic and add to the graphic zone
-							CropGraphic c = new CropGraphic(m_Crops.get(j), m_Plants.get(k), z, m_Garden);
-							c.addMouseDownHandler(new GraphicObjectMouseDownHandler());
-							c.addMouseUpHandler(new GraphicObjectMouseUpHandler());
-							c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
-							z.getCrops().add(c);
-							break;
-						}
-					}
-				}
-			}
-			
-			m_Garden.getZones().add(z);
-		}
-		m_Garden.InitializeComponents();
+		m_Garden.CreateZonesAndCrops(m_Plants);
+		
+		//m_Garden.InitializeComponents();
 		
 		//Creates the controls of the designer
 		//m_pnlControls.setSize("500", "100");

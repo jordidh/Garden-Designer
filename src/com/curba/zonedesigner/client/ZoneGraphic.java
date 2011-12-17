@@ -1,12 +1,8 @@
 package com.curba.zonedesigner.client;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.vaadin.gwtgraphics.client.shape.Rectangle;
-import org.vaadin.gwtgraphics.client.DrawingArea;
-import org.vaadin.gwtgraphics.client.Group;
 import org.vaadin.gwtgraphics.client.Image;
 
 

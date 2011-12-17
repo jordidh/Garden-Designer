@@ -1,11 +1,14 @@
 package com.curba.zonedesigner.client;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Window;
 
 public class GraphicObjectMouseUpHandler implements MouseUpHandler {
-
+	
 	@Override
 	public void onMouseUp(MouseUpEvent event) {
 		switch(GardenDesigner.m_SelectedAction) {
@@ -84,8 +87,10 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				else if (garden.getSelectedGraphicObject().getClass().getName() == CropGraphic.class.getName())
 				{
 					CropGraphic c = (CropGraphic)garden.getSelectedGraphicObject();
-					c.getCropEntity().setPointX(event.getRelativeX(garden.getElement()) - (c.getWidth() / 2));
-					c.getCropEntity().setPointY(event.getRelativeY(garden.getElement()) - (c.getHeight() / 2));
+					//c.getCropEntity().setPointX(event.getRelativeX(garden.getElement()) - (c.getWidth() / 2));
+					//c.getCropEntity().setPointY(event.getRelativeY(garden.getElement()) - (c.getHeight() / 2));
+					c.setPointX(event.getRelativeX(garden.getElement()) - (c.getWidth() / 2));
+					c.setPointY(event.getRelativeY(garden.getElement()) - (c.getHeight() / 2));
 				}
 			}
 			
@@ -97,13 +102,27 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 	private void addNewCrop(MouseUpEvent event) {
 		GardenGraphic garden = null;
 		
-		//Get the zone object
-		if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
+		try
 		{
-			ZoneGraphic z = (ZoneGraphic)event.getSource();
-			garden = z.getGarden();
-			
-			
+			//Get the zone object
+			if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
+			{
+				ZoneGraphic z = (ZoneGraphic)event.getSource();
+				garden = z.getGarden();
+				
+				if (CropCreationDialog.SelectedPlant == null){
+					Window.alert("Impossible to create a crop: There isn't any plant selected");
+					return;
+				}
+				
+				garden.AddCrop(-1, CropCreationDialog.NumPlants, event.getX(), event.getY(), CropCreationDialog.SelectedPlant, z);
+				
+				Window.alert("Crop created successfully");
+			}
+		}
+		catch(Exception ex)
+		{
+			Window.alert(ex.toString());
 		}
 	}
 }

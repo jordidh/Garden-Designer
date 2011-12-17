@@ -1,21 +1,13 @@
 package com.curba.zonedesigner.server;
 
 import com.curba.zonedesigner.client.GardeningService;
-import com.curba.zonedesigner.shared.ServerPlant;
-import com.google.gwt.dev.json.JsonArray;
-import com.google.gwt.dev.json.JsonObject;
-import com.google.gwt.dev.json.JsonValue;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 enum JSONReadingStates
 {

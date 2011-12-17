@@ -2,7 +2,7 @@ package com.curba.zonedesigner.client;
 
 import java.util.Date;
 
-import com.curba.zonedesigner.shared.ServerPlant;
+//import com.curba.zonedesigner.shared.ServerPlant;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class CropEntity extends JavaScriptObject {
@@ -29,6 +29,9 @@ public class CropEntity extends JavaScriptObject {
 	  //public final native int getSoilVolume() /*-{ return this.soil_volume; }-*/;
 	  //public final native int getDeleted() /*-{ return this.deleted; }-*/;  
 	  
+	  public final native void setZoneId(int id) /*-{ this.zoneId = id; }-*/;
+	  public final native void setPlantId(int id) /*-{ this.plantId = id; }-*/;
+	  public final native void setInitialRealDate(Date data) /*-{ this.initialRealDate = data; }-*/;
 	  public final native void setFinalRealDate(Date data) /*-{ this.finalRealDate = data; }-*/;
 	  public final native void setPointX(int x) /*-{ this.pointX = x; }-*/;
 	  public final native void setPointY(int y) /*-{ this.pointY = y; }-*/;

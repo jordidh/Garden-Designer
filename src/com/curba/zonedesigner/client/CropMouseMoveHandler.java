@@ -20,8 +20,9 @@ public class CropMouseMoveHandler implements MouseMoveHandler {
 		//For a rectangle or a image
 	    crop.setX(event.getX() - (crop.getWidth() / 2));
 	    crop.setY(event.getY() - (crop.getHeight() / 2));
-	    crop.getCropEntity().setPointX((int)(crop.getX() * 1.0 / 1.0));
-	    crop.getCropEntity().setPointY((int)(crop.getY() * 1.0 / 1.0));
-
+	    //crop.getCropEntity().setPointX((int)(crop.getX() * 1.0 / 1.0));
+	    //crop.getCropEntity().setPointY((int)(crop.getY() * 1.0 / 1.0));
+	    crop.setPointX((int)(crop.getX() * 1.0 / 1.0));
+	    crop.setPointY((int)(crop.getY() * 1.0 / 1.0));
 	}
 }
