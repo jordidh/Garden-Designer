@@ -42,7 +42,9 @@ public class ToolbarClickHandler implements ClickHandler {
 		}
 		else if (btn.getTitle().equals("ZoneNew"))
 		{
-			GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
+			ZoneCreationDialog diag = new ZoneCreationDialog();
+			diag.ShowDialog();
+			//GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
 		}
 		else if (btn.getTitle().equals("ZoneDelete"))
 		{

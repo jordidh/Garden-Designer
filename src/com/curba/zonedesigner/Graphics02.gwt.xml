@@ -17,7 +17,6 @@
   <!-- <inherits name="com.google.gwt.http.HTTP" />-->
 
   <!-- Specify the app entry point class.                         -->
-  <!-- <entry-point class='com.curba.zonedesigner.client.ZoneDesigner'/> -->
   <entry-point class='com.curba.zonedesigner.client.GardenDesigner'/>
 
   <!-- Specify the paths for translatable code                    -->

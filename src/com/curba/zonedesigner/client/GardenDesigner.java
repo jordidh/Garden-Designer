@@ -22,9 +22,9 @@ public class GardenDesigner implements EntryPoint {
 	static GardenAction m_SelectedAction = GardenAction.NONE;
 	
 	public static JsArray<PlantEntity> m_Plants = null;
-	private JsArray<GardenTypeEntity> m_GardenTypes = null;
-	private JsArray<RegionEntity> m_Regions = null;
-	private JsArray<ZoneTypeEntity> m_ZoneTypes = null;
+	public static JsArray<GardenTypeEntity> m_GardenTypes = null;
+	public static JsArray<RegionEntity> m_Regions = null;
+	public static JsArray<ZoneTypeEntity> m_ZoneTypes = null;
 	private JsArray<GardenEntity> m_Gardens = null;
 	
 	//Garden designer controls

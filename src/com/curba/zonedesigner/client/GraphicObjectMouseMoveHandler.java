@@ -42,6 +42,9 @@ public class GraphicObjectMouseMoveHandler implements MouseMoveHandler {
 					ZoneGraphic z = (ZoneGraphic)garden.getSelectedGraphicObject();
 					garden = z.getGarden();
 					
+					garden.MoveZone(z, event.getRelativeX(garden.getElement()), event.getRelativeY(garden.getElement()));
+					
+					/*
 					//Move the zone and his crops
 					int oldX = z.getX();
 					int oldY = z.getY();
@@ -73,12 +76,16 @@ public class GraphicObjectMouseMoveHandler implements MouseMoveHandler {
 					    	c.setY(c.getY() + newY - oldY);
 					    }
 					}
+					*/
 				}
 				else if (garden.getSelectedGraphicObject().getClass().getName() == CropGraphic.class.getName())
 				{
 					CropGraphic c = (CropGraphic)garden.getSelectedGraphicObject();
 					garden = c.getGarden();
 					
+					garden.MoveCrop(c, event.getRelativeX(garden.getElement()), event.getRelativeY(garden.getElement()));
+										
+					/*
 					//Move the crop
 					ZoneGraphic zone = c.getZone();
 					int newX = event.getRelativeX(garden.getElement()) - (c.getWidth() / 2);
@@ -97,6 +104,7 @@ public class GraphicObjectMouseMoveHandler implements MouseMoveHandler {
 					{
 					    c.setY(newY);
 					}
+					*/
 				}
 			}
 		}

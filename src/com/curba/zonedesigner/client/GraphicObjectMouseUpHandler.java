@@ -1,8 +1,5 @@
 package com.curba.zonedesigner.client;
 
-import java.util.Date;
-
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Window;
@@ -21,12 +18,18 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 			case DELETE_CROP:
 				break;
 			case PROPS_CROP:
+				if (event.getSource().getClass().getName() == CropGraphic.class.getName())
+				{
+					CropCreationDialog diag = new CropCreationDialog();
+					diag.ShowDialog();
+				}
 				break;
 			case PRUNE_CROP:
 				break;
 			case COLLECT_CROP:
 				break;
 			case NEW_ZONE:
+				addNewZone(event);
 				break;
 			case DELETE_ZONE:
 				break;
@@ -79,18 +82,20 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				if (garden.getSelectedGraphicObject().getClass().getName() == ZoneGraphic.class.getName())
 				{
 					ZoneGraphic z = (ZoneGraphic)garden.getSelectedGraphicObject();
-					z.getZoneEntity().setInitialPointX(event.getRelativeX(garden.getElement()) - (z.getWidth() / 2));
-					z.getZoneEntity().setInitialPointY(event.getRelativeY(garden.getElement()) - (z.getHeight() / 2));
-					z.getZoneEntity().setFinalPointX(z.getZoneEntity().getInitialPointX() + z.getWidth());
-					z.getZoneEntity().setFinalPointY(z.getZoneEntity().getInitialPointY() + z.getHeight());
+					//z.setInitialPointX(event.getRelativeX(garden.getElement()) - (z.getWidth() / 2));
+					//z.setInitialPointY(event.getRelativeY(garden.getElement()) - (z.getHeight() / 2));
+					garden.MoveZone(z, event.getRelativeX(garden.getElement()), event.getRelativeY(garden.getElement()));
+					//z.setFinalPointX(z.getInitialPointX() + z.getWidth());
+					//z.setFinalPointY(z.getInitialPointY() + z.getHeight());
 				}
 				else if (garden.getSelectedGraphicObject().getClass().getName() == CropGraphic.class.getName())
 				{
 					CropGraphic c = (CropGraphic)garden.getSelectedGraphicObject();
 					//c.getCropEntity().setPointX(event.getRelativeX(garden.getElement()) - (c.getWidth() / 2));
 					//c.getCropEntity().setPointY(event.getRelativeY(garden.getElement()) - (c.getHeight() / 2));
-					c.setPointX(event.getRelativeX(garden.getElement()) - (c.getWidth() / 2));
-					c.setPointY(event.getRelativeY(garden.getElement()) - (c.getHeight() / 2));
+					//c.setPointX(event.getRelativeX(garden.getElement()) - (c.getWidth() / 2));
+					//c.setPointY(event.getRelativeY(garden.getElement()) - (c.getHeight() / 2));
+					garden.MoveCrop(c, event.getRelativeX(garden.getElement()), event.getRelativeY(garden.getElement()));
 				}
 			}
 			
@@ -110,14 +115,40 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				ZoneGraphic z = (ZoneGraphic)event.getSource();
 				garden = z.getGarden();
 				
-				if (CropCreationDialog.SelectedPlant == null){
-					Window.alert("Impossible to create a crop: There isn't any plant selected");
-					return;
-				}
+				int newX = event.getRelativeX(garden.getElement());// - (c.getWidth() / 2);
+				int newY = event.getRelativeY(garden.getElement());// - (c.getHeight() / 2);
+				//int newX = event.getX();
+				//int newY = event.getY();
 				
-				garden.AddCrop(-1, CropCreationDialog.NumPlants, event.getX(), event.getY(), CropCreationDialog.SelectedPlant, z);
+				CropGraphic c = garden.AddCrop(-1, CropCreationDialog.NumPlants, newX, newY, CropCreationDialog.SelectedPlant, z);
 				
-				Window.alert("Crop created successfully");
+				Window.alert("Crop created successfully: " + c.toString());
+			}
+		}
+		catch(Exception ex)
+		{
+			Window.alert(ex.toString());
+		}
+	}
+	
+	//Function that adds a new zone
+	private void addNewZone(MouseUpEvent event) {
+		GardenGraphic garden = null;
+		
+		try
+		{
+			//Get the zone object
+			if (event.getSource().getClass().getName() == GardenGraphic.class.getName())
+			{
+				garden = (GardenGraphic)event.getSource();
+				
+				int newX = event.getRelativeX(garden.getElement());// - (c.getWidth() / 2);
+				int newY = event.getRelativeY(garden.getElement());// - (c.getHeight() / 2);
+				
+				ZoneGraphic z = garden.AddZone(-1, ZoneCreationDialog.Name, ZoneCreationDialog.Description, newX, newY, 
+						ZoneCreationDialog.Heigh, ZoneCreationDialog.Width, ZoneCreationDialog.Depth, ZoneCreationDialog.SelectedZoneType, garden);
+				
+				Window.alert("Zone created successfully: " + z.toString());
 			}
 		}
 		catch(Exception ex)

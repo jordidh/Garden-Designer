@@ -3,6 +3,7 @@ package com.curba.zonedesigner.client;
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Image;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ public class GardenGraphic extends DrawingArea {
 	{
 		m_SelectedGraphicObject = value;
 	}
-	
 	
 	public GardenGraphic(GardenEntity entity) {
 		super(entity.getWidth(), entity.getHeight());
@@ -105,24 +105,9 @@ public class GardenGraphic extends DrawingArea {
 			}
 		}
 	}
-	/*
-	public void InitializeComponents()
-	{
-		for(int i=0; i<m_zones.size(); i++)
-		{
-			this.add(m_zones.get(i));
-			for(int j=0; j<m_zones.get(i).getCrops().size(); j++)
-			{
-				this.add(m_zones.get(i).getCrops().get(j));
-			}
-		}
-	}
-	*/
 	
 	public void ReZoom(int zoomModifier)
 	{
-		//Window.alert(Integer.toString(zoomModifier));
-		
 		if (m_zoom <= 1 && m_zoom >= -1)
 		{
 			if (zoomModifier < 0) m_zoom = -1 + zoomModifier;
@@ -132,16 +117,24 @@ public class GardenGraphic extends DrawingArea {
 		{
 			m_zoom = m_zoom + zoomModifier;
 		}
-				
+		
+		//String msg = this.toString() + " Zoom=" + Integer.toString(m_zoom);
 		for(int i=0; i<m_zones.size(); i++)
 		{
+			//msg += " Crops=";
 			for(int j=0; j<m_zones.get(i).getCrops().size(); j++)
 			{
 				m_zones.get(i).getCrops().get(j).Zoom(m_zoom);
+				
+				//msg += m_zones.get(i).getCrops().get(j).toString() + " ";
 			}
 			m_zones.get(i).Zoom(m_zoom);
+			
+			//msg += m_zones.get(i).toString() + " ";
 		}
 		Zoom(m_zoom);
+		
+		//Window.alert(msg);
 	}
 	
 	public void Zoom(int zoom)
@@ -162,16 +155,139 @@ public class GardenGraphic extends DrawingArea {
 		}
 	}
 	
-	//Adds a crop
-	public void AddCrop(int id, int numPlants, int x, int y, PlantEntity p, ZoneGraphic z)
+	public int Unzoom(int value)
 	{
-		//m_EntityCrops.push(newEntity);
+		if (m_zoom == 0) m_zoom = 1;
+		
+		if (m_zoom <= 0)
+		{
+			return value * Math.abs(m_zoom);
+		}
+		else
+		{
+			return value / Math.abs(m_zoom);
+		}
+	}
+	
+	public void MoveCrop(CropGraphic crop, int zoomedX, int zoomedY)
+	{
+		ZoneGraphic zone = crop.getZone();
+		
+		int newX = zoomedX - (crop.getWidth() / 2);
+		int newY = zoomedY - (crop.getHeight() / 2);
+		
+		if (newX < zone.getX()) newX = zone.getX();
+		if (newX + crop.getWidth() > zone.getX() + zone.getWidth()) newX = zone.getX() + zone.getWidth() - crop.getWidth();
+		if (newX >= zone.getX() && (newX + crop.getWidth() <= zone.getX() + zone.getWidth()))
+		{
+			crop.setX(newX);
+		}
+		
+		if (newY < zone.getY()) newY = zone.getY();
+		if (newY + crop.getHeight() > zone.getY() + zone.getHeight()) newY = zone.getY() + zone.getHeight() - crop.getHeight();				
+		if (newY >= zone.getY() && (newY + crop.getHeight() <= zone.getY() + zone.getHeight()))
+		{
+		    crop.setY(newY);
+		}
+		
+		crop.setPointX(Unzoom(newX));
+		crop.setPointY(Unzoom(newY));
+		
+		//Unzoom x and y
+		//int x = Unzoom(zoomedX);
+		//int y = Unzoom(zoomedY);
+		//		
+		//crop.setPointX(x - (Unzoom(crop.getWidth()) / 2));
+		//crop.setPointY(y - (Unzoom(crop.getHeight()) / 2));
+	}
+	
+	public void MoveZone(ZoneGraphic zone, int zoomedX, int zoomedY)
+	{
+		GardenGraphic garden = zone.getGarden();
+		
+		//Move the zone and his crops
+		int oldX = zone.getX();
+		int oldY = zone.getY();
+		int newX = zoomedX - (zone.getWidth() / 2);
+		int newY = zoomedY - (zone.getHeight() / 2);
+		
+		if (newX < 0) newX = 0;
+		if (newX + zone.getWidth() > garden.getWidth()) newX = garden.getWidth() - zone.getWidth();  
+		if (newX >= 0 && (newX + zone.getWidth() <= garden.getWidth()))
+		{
+			zone.setX(newX);
+		    //Move each zone crop
+		    for (int i=0; i<zone.getCrops().size(); i++)
+		    {
+		    	CropGraphic c = zone.getCrops().get(i);
+		    	c.setX(c.getX() + newX - oldX);
+		    	
+		    	c.setPointX(Unzoom(c.getX() + newX - oldX));
+		    }
+		}
+		
+		if (newY < 0) newY = 0;
+		if (newY + zone.getHeight() > garden.getHeight()) newY = garden.getHeight() - zone.getHeight();  
+		if (newY >= 0 && (newY + zone.getHeight() <= garden.getHeight()))
+		{
+		    zone.setY(newY);
+		    //Move each zone crop
+		    for (int i=0; i<zone.getCrops().size(); i++)
+		    {
+		    	CropGraphic c = zone.getCrops().get(i);
+		    	c.setY(c.getY() + newY - oldY);
+		    	
+		    	c.setPointY(Unzoom(c.getY() + newY - oldY));
+		    }
+		}
+		
+		zone.setInitialPointX(Unzoom(newX));
+		zone.setInitialPointY(Unzoom(newY));
+		
+		//Unzoom x and y
+		//int x = Unzoom(zoomedX);
+		//int y = Unzoom(zoomedY);
+		//		
+		//zone.setInitialPointX(x - (Unzoom(zone.getWidth()) / 2));
+		//zone.setInitialPointY(y - (Unzoom(zone.getHeight()) / 2));
+	}
+	
+	//Adds a crop
+	public CropGraphic AddCrop(int id, int numPlants, int zoomedX, int zoomedY, PlantEntity p, ZoneGraphic z)
+	{
+		//Unzoom x and y
+		int x = Unzoom(zoomedX);
+		int y = Unzoom(zoomedY);
+		
+		//Create crop
 		CropGraphic c = new CropGraphic(id, numPlants, x, y, p, z, this);
 		c.addMouseDownHandler(new GraphicObjectMouseDownHandler());
 		c.addMouseUpHandler(new GraphicObjectMouseUpHandler());
 		c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
 		z.getCrops().add(c);
+		c.Zoom(m_zoom);
 		this.add(c);
+		
+		return c;
+	}
+	
+	//Adds a crop
+	public ZoneGraphic AddZone(int id, String name, String description, int zoomedX, int zoomedY, int heigh, int width, int depth, ZoneTypeEntity t, GardenGraphic g)
+	{
+		//Unzoom x and y
+		int x = Unzoom(zoomedX);
+		int y = Unzoom(zoomedY);
+		
+		//Create zone
+		ZoneGraphic z = new ZoneGraphic(-1, name, description, x, y, heigh, width, depth, t, g);
+		z.addMouseDownHandler(new GraphicObjectMouseDownHandler());
+		z.addMouseUpHandler(new GraphicObjectMouseUpHandler());
+		z.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
+		g.getZones().add(z);
+		z.Zoom(m_zoom);
+		this.add(z);
+		
+		return z;
 	}
 	
 	//Adds a crop
@@ -180,7 +296,23 @@ public class GardenGraphic extends DrawingArea {
 		//Loads zones and crops to the garden
 		for(int i=0; i<m_EntityZones.length(); i++)
 		{
-			ZoneGraphic z = new ZoneGraphic(m_EntityZones.get(i), this);
+			ZoneTypeEntity zoneTypeEntity = null;
+			for(int izte=0; izte<GardenDesigner.m_ZoneTypes.length(); izte++)
+			{
+				if (GardenDesigner.m_ZoneTypes.get(izte).getId() == m_EntityZones.get(i).getId())
+				{
+					zoneTypeEntity = GardenDesigner.m_ZoneTypes.get(izte);
+					break;
+				}
+			}
+			
+			if (zoneTypeEntity == null)
+			{
+				Window.alert("Error loading zones: zone type " + Integer.toString(m_EntityZones.get(i).getId()) + " not found");
+				return;
+			}
+			
+			ZoneGraphic z = new ZoneGraphic(m_EntityZones.get(i), zoneTypeEntity, this);
 			z.addMouseDownHandler(new GraphicObjectMouseDownHandler());
 			z.addMouseUpHandler(new GraphicObjectMouseUpHandler());
 			z.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
@@ -196,8 +328,8 @@ public class GardenGraphic extends DrawingArea {
 						if (plants.get(k).getId() == m_EntityCrops.get(j).getPlantId())
 						{
 							//Create a CropGraphic and add to the graphic zone
-							//CropGraphic c = new CropGraphic(m_EntityCrops.get(j), plants.get(k), z, this);
-							CropGraphic c = new CropGraphic(m_EntityCrops.get(j).getId(), m_EntityCrops.get(j).getNumPlants(), m_EntityCrops.get(j).getPointX(), m_EntityCrops.get(j).getPointY(), plants.get(k), z, this);
+							CropGraphic c = new CropGraphic(m_EntityCrops.get(j), plants.get(k), z, this);
+							//CropGraphic c = new CropGraphic(m_EntityCrops.get(j).getId(), m_EntityCrops.get(j).getNumPlants(), m_EntityCrops.get(j).getPointX(), m_EntityCrops.get(j).getPointY(), plants.get(k), z, this);
 							c.addMouseDownHandler(new GraphicObjectMouseDownHandler());
 							c.addMouseUpHandler(new GraphicObjectMouseUpHandler());
 							c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
@@ -211,6 +343,12 @@ public class GardenGraphic extends DrawingArea {
 			
 			this.getZones().add(z);
 		}
+	}
+	
+	@Override 
+	public String toString()
+	{
+		return "[Garden (" + Integer.toString(m_entity.getWidth()) + "x" + Integer.toString(m_entity.getHeight()) + ")]";
 	}
 }
 	

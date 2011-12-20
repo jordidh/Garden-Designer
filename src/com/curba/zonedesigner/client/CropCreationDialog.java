@@ -57,21 +57,19 @@ public class CropCreationDialog {
 						break;
 					}
 				}
+				if (SelectedPlant == null) return;
 				
 				NumPlants = 1;
 				try
 				{
 					NumPlants = Integer.parseInt(txtNumPlants.getValue());
 					GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
+					dialogBox.hide();
 				}
 				catch(Exception ex)
 				{
 					Window.alert(ex.getMessage());
-					GardenDesigner.m_SelectedAction = GardenAction.NONE;
 				}
-				
-				
-				dialogBox.hide();
 			}
 		});
 

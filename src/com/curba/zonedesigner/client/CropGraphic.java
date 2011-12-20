@@ -6,7 +6,6 @@ import org.vaadin.gwtgraphics.client.Image;
 
 
 public class CropGraphic extends Image /*Rectangle*/ {
-	
 	//private CropEntity m_crop;
 	private PlantEntity m_plant;
 	private GardenGraphic m_garden;
@@ -54,30 +53,38 @@ public class CropGraphic extends Image /*Rectangle*/ {
 		m_pointY = value;
 	}
 	private int m_numPlants;
-
-	/*
-	public CropGraphic(int x, int y, int width, int height, ZoneGraphic zone, GardenGraphic garden) {
-		super(x, y, width, height, "http://www.ikea.com/gb/en/images/products/ficus-microcarpa-ginseng-potted-plant__67525_PE181357_S4.jpg");
-		// TODO Auto-generated constructor stub
-		
-		setZone(zone);
-		setGarden(garden);
-		//this.setFillColor("green");
-		//this.setFillOpacity(0.5);
-		
-		//this.setRotation(20);
+	public int getNumPlants()
+	{
+		return m_numPlants;
 	}
-	*/
 	
-	/*
+	private Boolean m_isNew;
+	public Boolean getIsNew() {
+		return m_isNew;
+	}
+	public void setIsNew(Boolean m_isNew) {
+		this.m_isNew = m_isNew;
+	}
+	
+	private Boolean m_isDeleted;
+	private Boolean getIsDeleted()
+	{
+		return m_isDeleted;
+	}
+	private void setDeleted(Boolean value)
+	{
+		m_isDeleted = true;
+	}
+
+	//Creates a crop that already exists in the DB
 	//Constructor que calcula l'area de plantaci� en funci� del volum necessitat per la planta
 	//i de la profuncitat de la taula de plantaci�. P.e. una taula poc fonda generar� un marc de
 	//plantaci� m�s gran i una taula molt profunda generar� un marc de plantaci� est�ndar.
-	public CropGraphic(CropEntity crop, PlantEntity plant, ZoneGraphic zone, GardenGraphic garden) {
-		super(crop.getPointX(), crop.getPointY(), plant.getWidthSpacing(), plant.getHeightSpacing(), "http://www.ikea.com/gb/en/images/products/ficus-microcarpa-ginseng-potted-plant__67525_PE181357_S4.jpg");
+	public CropGraphic(CropEntity entity, PlantEntity plant, ZoneGraphic zone, GardenGraphic garden) {
+		super(entity.getPointX(), entity.getPointY(), plant.getWidthSpacing(), plant.getHeightSpacing(), "http://www.ikea.com/gb/en/images/products/ficus-microcarpa-ginseng-potted-plant__67525_PE181357_S4.jpg");
 		
 		// TODO Auto-generated constructor stub
-		setCropEntity(crop);
+		//setCropEntity(crop);
 		setPlantEntity(plant);
 		setZone(zone);
 		setGarden(garden);
@@ -87,19 +94,22 @@ public class CropGraphic extends Image /*Rectangle*/ {
 		
 		//this.setRotation(20);
 		
-		m_id = -1;
-		m_zoneId = zone.getZoneEntity().getId();
-		m_plantId = -1;
+		m_id = entity.getId();
+		m_zoneId = zone.getId();
+		m_plantId = plant.getId();
 		//m_initialRealDate;
 		//m_initialPlannedDate;
 		//m_finalRealDate;
 		//m_finalPlannedDate;
-		m_pointX = x;
-		m_pointY = y;
-		m_numPlants = 1;
+		m_pointX = entity.getPointX();
+		m_pointY = entity.getPointY();
+		m_numPlants = entity.getNumPlants();
+		
+		setIsNew(false);
+		m_isDeleted = false;
 	}
-	*/
 	
+	//Creates a crop that no exists in the DB
 	//Constructor que calcula l'area de plantaci� en funci� del volum necessitat per la planta
 	//i de la profuncitat de la taula de plantaci�. P.e. una taula poc fonda generar� un marc de
 	//plantaci� m�s gran i una taula molt profunda generar� un marc de plantaci� est�ndar.
@@ -118,7 +128,7 @@ public class CropGraphic extends Image /*Rectangle*/ {
 		//this.setRotation(20);
 		
 		m_id = id;
-		m_zoneId = zone.getZoneEntity().getId();
+		m_zoneId = zone.getId();
 		m_plantId = plant.getId();
 		if (id == -1) m_initialRealDate = new Date();
 		//m_initialPlannedDate;
@@ -127,23 +137,15 @@ public class CropGraphic extends Image /*Rectangle*/ {
 		m_pointX = x;
 		m_pointY = y;
 		m_numPlants = numPlants;
+		
+		setIsNew(true);
+		m_isDeleted = false;
 	}
 	
 	public void SetRealFinalDate(Date date)
 	{
-		//getCropEntity().setFinalRealDate(date);
 		m_finalRealDate = date;
 	}
-
-	/*
-	public void setCropEntity(CropEntity crop) {
-		this.m_crop = crop;
-	}
-
-	public CropEntity getCropEntity() {
-		return m_crop;
-	}
-	*/
 
 	public void setPlantEntity(PlantEntity plant) {
 		this.m_plant = plant;
@@ -153,23 +155,34 @@ public class CropGraphic extends Image /*Rectangle*/ {
 		return m_plant;
 	}
 	
+	public void ZoomToOriginal()
+	{
+		Zoom(1);
+	}
+	
 	public void Zoom(int zoom)
 	{
 		if (zoom == 0) zoom = 1;
 		
 		if (zoom >= 0)
 		{
-			super.setX(m_pointX /*getCropEntity().getPointX()*/ * zoom);
-			super.setY(m_pointY /*getCropEntity().getPointY()*/ * zoom);
+			super.setX(m_pointX * zoom);
+			super.setY(m_pointY * zoom);
 			super.setWidth(getPlantEntity().getWidthSpacing() * zoom);
 			super.setHeight(getPlantEntity().getHeightSpacing() * zoom);
 		}
 		else
 		{
-			super.setX(m_pointX /*getCropEntity().getPointX()*/ / Math.abs(zoom));
-			super.setY(m_pointY /*getCropEntity().getPointY()*/ / Math.abs(zoom));
+			super.setX(m_pointX / Math.abs(zoom));
+			super.setY(m_pointY / Math.abs(zoom));
 			super.setWidth(getPlantEntity().getWidthSpacing() / Math.abs(zoom));
 			super.setHeight(getPlantEntity().getHeightSpacing() / Math.abs(zoom));
 		}
+	}
+	
+	@Override 
+	public String toString()
+	{
+		return this.m_plant.getName() + " (" + Integer.toString(m_pointX) + "," + Integer.toString(m_pointY) + ")";
 	}
 }
