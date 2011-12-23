@@ -20,18 +20,26 @@ public class ToolbarClickHandler implements ClickHandler {
 		
 		if (btn.getTitle().equals("CropNew"))
 		{
-			CropCreationDialog diag = new CropCreationDialog();
-			diag.ShowDialog();
 			//GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
+			CropCreationDialog diag = new CropCreationDialog();
+			diag.ShowDialog(GardenAction.NEW_CROP);
 		}
-		else if (btn.getTitle().equals("CropDelete"))
+		else if (btn.getTitle().equals("CropOrZoneDelete"))
 		{
 			GardenDesigner.m_SelectedAction = GardenAction.DELETE_CROP;
 		}
-		else if (btn.getTitle().equals("CropProps"))
+		else if (btn.getTitle().equals("CropOrZoneProps"))
 		{
 			GardenDesigner.m_SelectedAction = GardenAction.PROPS_CROP;
 		}
+//		else if (btn.getTitle().equals("CropDelete"))
+//		{
+//			GardenDesigner.m_SelectedAction = GardenAction.DELETE_CROP;
+//		}
+//		else if (btn.getTitle().equals("CropProps"))
+//		{
+//			GardenDesigner.m_SelectedAction = GardenAction.PROPS_CROP;
+//		}
 		else if (btn.getTitle().equals("CropPrune"))
 		{
 			GardenDesigner.m_SelectedAction = GardenAction.PRUNE_CROP;
@@ -42,26 +50,26 @@ public class ToolbarClickHandler implements ClickHandler {
 		}
 		else if (btn.getTitle().equals("ZoneNew"))
 		{
-			ZoneCreationDialog diag = new ZoneCreationDialog();
-			diag.ShowDialog();
 			//GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
+			ZoneCreationDialog diag = new ZoneCreationDialog();
+			diag.ShowDialog(GardenAction.NEW_ZONE);
 		}
-		else if (btn.getTitle().equals("ZoneDelete"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.DELETE_ZONE;
-		}
-		else if (btn.getTitle().equals("ZoneProps"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.PROPS_ZONE;
-		}
+//		else if (btn.getTitle().equals("ZoneDelete"))
+//		{
+//			GardenDesigner.m_SelectedAction = GardenAction.DELETE_ZONE;
+//		}
+//		else if (btn.getTitle().equals("ZoneProps"))
+//		{
+//			GardenDesigner.m_SelectedAction = GardenAction.PROPS_ZONE;
+//		}
 		else if (btn.getTitle().equals("ZoneWatering"))
 		{
 			GardenDesigner.m_SelectedAction = GardenAction.WATERING_ZONE;
 		}
-		else if (btn.getTitle().equals("GardenProps"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.PROPS_GARDEN;
-		}
+//		else if (btn.getTitle().equals("GardenProps"))
+//		{
+//			GardenDesigner.m_SelectedAction = GardenAction.PROPS_GARDEN;
+//		}
 		else if (btn.getTitle().equals("Save"))
 		{
 			GardenDesigner.m_SelectedAction = GardenAction.SAVE;

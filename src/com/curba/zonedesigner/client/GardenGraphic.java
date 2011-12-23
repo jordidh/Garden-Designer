@@ -12,8 +12,11 @@ public class GardenGraphic extends DrawingArea {
 	private RegionEntity m_region;
 	private GardenTypeEntity m_gardenType;
 	private GardenEntity m_entity;
-	List<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
+	ArrayList<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
 	private int m_zoom = 0;
+	
+	private ArrayList<CropGraphic> m_CropsDeleted = new ArrayList<CropGraphic>();
+	private ArrayList<ZoneGraphic> m_ZonesDeleted = new ArrayList<ZoneGraphic>();
 	
 	private JsArray<CropEntity> m_EntityCrops = null;
 	public JsArray<CropEntity> getEntityCrops()
@@ -266,7 +269,11 @@ public class GardenGraphic extends DrawingArea {
 		c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
 		z.getCrops().add(c);
 		c.Zoom(m_zoom);
-		this.add(c);
+		
+		if (!c.getIsDeleted())
+		{
+			this.add(c);
+		}
 		
 		return c;
 	}
@@ -285,9 +292,46 @@ public class GardenGraphic extends DrawingArea {
 		z.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
 		g.getZones().add(z);
 		z.Zoom(m_zoom);
-		this.add(z);
+		
+		if (!z.getIsDeleted())
+		{
+			this.add(z);
+		}
 		
 		return z;
+	}
+	
+	//Deletes a crop
+	public void DeleteCrop(CropGraphic c)
+	{
+		c.setDeleted(true);
+		this.remove(c);
+		
+		//Save the crop to delete from DB
+		if (!c.getIsNew())
+		{
+			m_CropsDeleted.add(c);
+		}
+	}
+	
+	//Deletes a zone
+	public void DeleteZone(ZoneGraphic z)
+	{
+		//Deletes all zone crops
+		for(int i=0; i<z.m_crops.size(); i++)
+		{
+			DeleteCrop(z.m_crops.get(i));
+		}
+		
+		//Deletes the zone
+		z.setDeleted(true);
+		this.remove(z);
+		
+		//Save the zone to delete from DB
+		if (!z.getIsNew())
+		{
+			m_ZonesDeleted.add(z);
+		}
 	}
 	
 	//Adds a crop
@@ -316,7 +360,10 @@ public class GardenGraphic extends DrawingArea {
 			z.addMouseDownHandler(new GraphicObjectMouseDownHandler());
 			z.addMouseUpHandler(new GraphicObjectMouseUpHandler());
 			z.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
-			this.add(z);
+			if (!z.getIsDeleted())
+			{
+				this.add(z);
+			}
 			
 			for(int j=0; j<m_EntityCrops.length(); j++)
 			{
@@ -334,7 +381,10 @@ public class GardenGraphic extends DrawingArea {
 							c.addMouseUpHandler(new GraphicObjectMouseUpHandler());
 							c.addMouseMoveHandler(new GraphicObjectMouseMoveHandler());
 							z.getCrops().add(c);
-							this.add(c);
+							if (!c.getIsDeleted())
+							{
+								this.add(c);
+							}
 							break;
 						}
 					}

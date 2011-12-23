@@ -120,11 +120,11 @@ public class ZoneGraphic extends Image /*DrawingArea*/ {
 
 	
 	private Boolean m_isDeleted;
-	private Boolean getIsDeleted()
+	public Boolean getIsDeleted()
 	{
 		return m_isDeleted;
 	}
-	private void setDeleted(Boolean value)
+	public void setDeleted(Boolean value)
 	{
 		m_isDeleted = true;
 	}

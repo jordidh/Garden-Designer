@@ -16,13 +16,10 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				addNewCrop(event);
 				break;
 			case DELETE_CROP:
+				deleteZoneOrCrop(event);
 				break;
 			case PROPS_CROP:
-				if (event.getSource().getClass().getName() == CropGraphic.class.getName())
-				{
-					CropCreationDialog diag = new CropCreationDialog();
-					diag.ShowDialog();
-				}
+				propsZoneOrCrop(event);
 				break;
 			case PRUNE_CROP:
 				break;
@@ -32,8 +29,10 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				addNewZone(event);
 				break;
 			case DELETE_ZONE:
+				deleteZoneOrCrop(event);
 				break;
 			case PROPS_ZONE:
+				propsZoneOrCrop(event);
 				break;
 			case WATERING_ZONE:
 				break;
@@ -103,13 +102,14 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 		}
 	}
 	
-	//Function that adds a new crop into a zone
-	private void addNewCrop(MouseUpEvent event) {
+	//Function that creates a new crop
+	private void addNewCrop(MouseUpEvent event)
+	{
 		GardenGraphic garden = null;
 		
 		try
 		{
-			//Get the zone object
+			//Adds a crop
 			if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
 			{
 				ZoneGraphic z = (ZoneGraphic)event.getSource();
@@ -129,15 +129,16 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 		{
 			Window.alert(ex.toString());
 		}
+		
 	}
-	
-	//Function that adds a new zone
-	private void addNewZone(MouseUpEvent event) {
+
+	//Function that creates a new zone
+	private void addNewZone(MouseUpEvent event)
+	{
 		GardenGraphic garden = null;
 		
 		try
 		{
-			//Get the zone object
 			if (event.getSource().getClass().getName() == GardenGraphic.class.getName())
 			{
 				garden = (GardenGraphic)event.getSource();
@@ -146,9 +147,89 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				int newY = event.getRelativeY(garden.getElement());// - (c.getHeight() / 2);
 				
 				ZoneGraphic z = garden.AddZone(-1, ZoneCreationDialog.Name, ZoneCreationDialog.Description, newX, newY, 
-						ZoneCreationDialog.Heigh, ZoneCreationDialog.Width, ZoneCreationDialog.Depth, ZoneCreationDialog.SelectedZoneType, garden);
+						ZoneCreationDialog.Height, ZoneCreationDialog.Width, ZoneCreationDialog.Depth, ZoneCreationDialog.SelectedZoneType, garden);
 				
 				Window.alert("Zone created successfully: " + z.toString());
+			}
+		}
+		catch(Exception ex)
+		{
+			Window.alert(ex.toString());
+		}
+		
+	}
+		
+	//Function that deletes a crop
+	private void deleteZoneOrCrop(MouseUpEvent event) {
+
+		GardenGraphic garden = null;
+		
+		try
+		{
+			//Deletes a crop
+			if (event.getSource().getClass().getName() == CropGraphic.class.getName())
+			{
+				CropGraphic c = (CropGraphic)event.getSource();
+				garden = c.getGarden();
+
+				if (Window.confirm("Are you sure you want to remove the crop \"" + c.getPlantName() + "\"?"))
+				{
+					garden.DeleteCrop(c);
+					
+					Window.alert("Crop deleted successfully: " + c.toString());
+				}
+			}
+			//Deletes a zone
+			else if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
+			{
+				ZoneGraphic z = (ZoneGraphic)event.getSource();
+				garden = z.getGarden();
+
+				if (Window.confirm("Are you sure you want to remove the zone \"" + z.getName() + "\"?"))
+				{					
+					garden.DeleteZone(z);
+					
+					Window.alert("Zone deleted successfully: " + z.toString());
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			Window.alert(ex.toString());
+		}
+	}
+
+	//Shows properties to modify a zone or crop
+	private void propsZoneOrCrop(MouseUpEvent event)
+	{
+		GardenGraphic garden = null;
+		
+		try
+		{
+			//Shows the properties of a crop
+			if (event.getSource().getClass().getName() == CropGraphic.class.getName())
+			{
+				CropGraphic c = (CropGraphic)event.getSource();
+				garden = c.getGarden();
+				
+				CropCreationDialog diag = new CropCreationDialog();
+				CropCreationDialog.SelectedPlant = c.getPlantEntity();
+				CropCreationDialog.NumPlants = c.getNumPlants();
+				diag.ShowDialog(GardenAction.PROPS_CROP);
+			}
+			//Shows the properties of a zone
+			else if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
+			{
+				ZoneGraphic z = (ZoneGraphic)event.getSource();
+				garden = z.getGarden();
+				
+				ZoneCreationDialog diag = new ZoneCreationDialog();
+				ZoneCreationDialog.Name = z.getName();
+				ZoneCreationDialog.Description = z.getDescription();
+				ZoneCreationDialog.Width = z.getWidth();
+				ZoneCreationDialog.Height = z.getHeight();
+				ZoneCreationDialog.Depth = z.getDepth();
+				diag.ShowDialog(GardenAction.PROPS_ZONE);
 			}
 		}
 		catch(Exception ex)

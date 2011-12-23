@@ -8,6 +8,12 @@ import org.vaadin.gwtgraphics.client.Image;
 public class CropGraphic extends Image /*Rectangle*/ {
 	//private CropEntity m_crop;
 	private PlantEntity m_plant;
+	
+	public String getPlantName()
+	{
+		return m_plant.getName();
+	}
+	
 	private GardenGraphic m_garden;
 	GardenGraphic getGarden()
 	{
@@ -67,11 +73,11 @@ public class CropGraphic extends Image /*Rectangle*/ {
 	}
 	
 	private Boolean m_isDeleted;
-	private Boolean getIsDeleted()
+	public Boolean getIsDeleted()
 	{
 		return m_isDeleted;
 	}
-	private void setDeleted(Boolean value)
+	public void setDeleted(Boolean value)
 	{
 		m_isDeleted = true;
 	}

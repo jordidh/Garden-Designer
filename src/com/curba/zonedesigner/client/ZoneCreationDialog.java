@@ -16,27 +16,43 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ZoneCreationDialog {
 	final DialogBox dialogBox;
 	
+	private GardenAction m_actionToConfirm = GardenAction.NONE;
+	
 	public static String Name;
 	public static String Description;
 	public static ZoneTypeEntity SelectedZoneType = null;
 	public static int Width = 0;
-	public static int Heigh = 0;
+	public static int Height = 0;
 	public static int Depth = 0;
+	
+	public static Boolean ResultOk = false;
+
+	final TextBox txtName = new TextBox();
+	final TextArea txtDescription = new TextArea();
+	final ListBox zoneType = new ListBox();
+	final TextBox txtWidth = new TextBox();
+	final TextBox txtHeigh = new TextBox();
+	final TextBox txtDepth = new TextBox();
 	
 	public ZoneCreationDialog()
 	{
+		ResultOk = false;
+		
+		Name = "";
+		Description = "";
+		SelectedZoneType = null;
+		Width = 1000;
+		Height = 1000;
+		Depth = 200;
+		
 		//Zone name
-		final TextBox txtName = new TextBox();
 		txtName.setMaxLength(255);
-		txtName.setValue("");
 		
 		//Zone description
-		final TextArea txtDescription = new TextArea();
 		txtDescription.setCharacterWidth(40);
 		txtDescription.setVisibleLines(6);
 		
 		//List box
-		final ListBox zoneType = new ListBox();
 		for(int i=0; i<GardenDesigner.m_ZoneTypes.length(); i++)
 		{
 			zoneType.addItem(GardenDesigner.m_ZoneTypes.get(i).getName(), HasDirection.Direction.DEFAULT, Integer.toString(GardenDesigner.m_ZoneTypes.get(i).getId()));
@@ -44,19 +60,13 @@ public class ZoneCreationDialog {
 		zoneType.setVisibleItemCount(1);
 		
 		//Zone width
-		final TextBox txtWidth = new TextBox();
 		txtWidth.setMaxLength(10);
-		txtWidth.setValue("1000");
 		
 		//Zone height
-		final TextBox txtHeigh = new TextBox();
 		txtHeigh.setMaxLength(10);
-		txtHeigh.setValue("1000");
 		
 		//Zone depth
-		final TextBox txtDepth = new TextBox();
 		txtDepth.setMaxLength(10);
-		txtDepth.setValue("200");
 
 		//Cancel Button
 		final Button cancelButton = new Button("Cancel");
@@ -64,6 +74,7 @@ public class ZoneCreationDialog {
 		cancelButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				GardenDesigner.m_SelectedAction = GardenAction.NONE;
+				//ResultOk = false;
 				dialogBox.hide();
 			}
 		});		
@@ -89,9 +100,11 @@ public class ZoneCreationDialog {
 					Name = txtName.getValue();
 					Description = txtDescription.getValue();
 					Width = Integer.parseInt(txtWidth.getValue());
-					Heigh = Integer.parseInt(txtHeigh.getValue());
+					Height = Integer.parseInt(txtHeigh.getValue());
 					Depth = Integer.parseInt(txtDepth.getValue());
-					GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
+					//GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
+					GardenDesigner.m_SelectedAction = m_actionToConfirm;
+					//ResultOk = true;
 					dialogBox.hide();
 				}
 				catch(Exception ex)
@@ -132,8 +145,26 @@ public class ZoneCreationDialog {
 		dialogBox.setWidget(dialogVPanel);
 	}
 	
-	public void ShowDialog(){
-		//dialogBox.setText("Load RPC - Failure");
+	public void ShowDialog(GardenAction actionToConfirm){
+		m_actionToConfirm = actionToConfirm;
+		
+		txtName.setValue(Name);
+		txtDescription.setValue(Description);
+		txtWidth.setValue(Integer.toString(Width));
+		txtHeigh.setValue(Integer.toString(Height));
+		txtDepth.setValue(Integer.toString(Depth));
+		if (SelectedZoneType != null)
+		{
+			for(int i=0; i<zoneType.getItemCount(); i++)
+			{
+				if (Integer.toString(SelectedZoneType.getId()).equals(zoneType.getValue(i)))
+				{
+					zoneType.setSelectedIndex(i);
+					break;
+				}
+			}
+		}
+		
 		dialogBox.center();
 	}
 }

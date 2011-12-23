@@ -15,13 +15,25 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class CropCreationDialog {
 	final DialogBox dialogBox;
 	
+	private GardenAction m_actionToConfirm = GardenAction.NONE;
+	
 	public static PlantEntity SelectedPlant = null;
 	public static int NumPlants = 1;
 	
+	public static Boolean ResultOk = false;
+
+	final ListBox cropPlant = new ListBox();
+	final TextBox txtNumPlants = new TextBox();
+	
 	public CropCreationDialog()
 	{
+		ResultOk = false;
+		
+		SelectedPlant = null;
+		NumPlants = 1;
+		
+		
 		//List box
-		final ListBox cropPlant = new ListBox();
 		for(int i=0; i<GardenDesigner.m_Plants.length(); i++)
 		{
 		    cropPlant.addItem(GardenDesigner.m_Plants.get(i).getName(), HasDirection.Direction.DEFAULT, Integer.toString(GardenDesigner.m_Plants.get(i).getId()));
@@ -29,7 +41,6 @@ public class CropCreationDialog {
 	    cropPlant.setVisibleItemCount(1);
 
 	    //Number plants text box
-		final TextBox txtNumPlants = new TextBox();
 		txtNumPlants.setMaxLength(2);
 		txtNumPlants.setValue("1");
 		
@@ -39,6 +50,7 @@ public class CropCreationDialog {
 		cancelButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				GardenDesigner.m_SelectedAction = GardenAction.NONE;
+				//ResultOk = false;
 				dialogBox.hide();
 			}
 		});		
@@ -63,7 +75,9 @@ public class CropCreationDialog {
 				try
 				{
 					NumPlants = Integer.parseInt(txtNumPlants.getValue());
-					GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
+					//GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
+					GardenDesigner.m_SelectedAction = m_actionToConfirm;
+					//ResultOk = true;
 					dialogBox.hide();
 				}
 				catch(Exception ex)
@@ -96,8 +110,22 @@ public class CropCreationDialog {
 		dialogBox.setWidget(dialogVPanel);
 	}
 	
-	public void ShowDialog(){
-		//dialogBox.setText("Load RPC - Failure");
+	public void ShowDialog(GardenAction actionToConfirm){
+		m_actionToConfirm = actionToConfirm;
+		
+		txtNumPlants.setValue(Integer.toString(NumPlants));
+		
+		if (SelectedPlant != null)
+		{
+			for(int i=0; i<cropPlant.getItemCount(); i++)
+			{
+				if (Integer.toString(SelectedPlant.getId()).equals(cropPlant.getValue(i)))
+				{
+					cropPlant.setSelectedIndex(i);
+					break;
+				}
+			}
+		}
 		dialogBox.center();
 	}
 }
