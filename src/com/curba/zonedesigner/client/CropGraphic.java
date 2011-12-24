@@ -63,6 +63,10 @@ public class CropGraphic extends Image /*Rectangle*/ {
 	{
 		return m_numPlants;
 	}
+	public void setNumPlants(int value)
+	{
+		m_numPlants = value;
+	}
 	
 	private Boolean m_isNew;
 	public Boolean getIsNew() {

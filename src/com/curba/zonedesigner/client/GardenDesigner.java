@@ -25,6 +25,7 @@ public class GardenDesigner implements EntryPoint {
 	public static JsArray<GardenTypeEntity> m_GardenTypes = null;
 	public static JsArray<RegionEntity> m_Regions = null;
 	public static JsArray<ZoneTypeEntity> m_ZoneTypes = null;
+	public static JsArray<ActionTypeEntity> m_ActionTypes = null;
 	private JsArray<GardenEntity> m_Gardens = null;
 	
 	//Garden designer controls
@@ -72,6 +73,9 @@ public class GardenDesigner implements EntryPoint {
 	private final native JsArray<GardenTypeEntity> asArrayOfGardenTypeEntity(String json) /*-{
 		return eval(json);
 	}-*/;
+	private final native JsArray<ActionTypeEntity> asArrayOfActionTypeEntity(String json) /*-{
+		return eval(json);
+	}-*/;
 
 	/**
 	 * Global variables
@@ -101,6 +105,8 @@ public class GardenDesigner implements EntryPoint {
 		m_Gardens = asArrayOfGardenEntity("[" + parGarden.replace("%2C", ",").replace("&quot;", "\"") + "]");
 		String parZoneTypes = DOM.getElementAttribute(DOM.getElementById("parZoneTypes"), "value");
 		m_ZoneTypes = asArrayOfZoneTypeEntity(parZoneTypes.replace("%2C", ",").replace("&quot;", "\""));		
+		String parActionTypes = DOM.getElementAttribute(DOM.getElementById("parActionTypes"), "value");
+		m_ActionTypes = asArrayOfActionTypeEntity(parActionTypes.replace("%2C", ",").replace("&quot;", "\""));
 			
 		//Get the sizes of the control
 		String parWidth = DOM.getElementAttribute(DOM.getElementById("ajaxGardenEditor"), "width"); 
@@ -181,8 +187,7 @@ public class GardenDesigner implements EntryPoint {
 		RootPanel.get("ajaxGardenControls").add(m_pnlControls);
 		//Sets the control in the div named "ajaxGardenEditor"
 		RootPanel.get("ajaxGardenEditor").add(m_Garden);
-		
-		
+				
 		
 		//Window.alert("Ok");
 		

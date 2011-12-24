@@ -22,7 +22,7 @@ public class ToolbarClickHandler implements ClickHandler {
 		{
 			//GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
 			CropCreationDialog diag = new CropCreationDialog();
-			diag.ShowDialog(GardenAction.NEW_CROP);
+			diag.ShowDialog(null);
 		}
 		else if (btn.getTitle().equals("CropOrZoneDelete"))
 		{
@@ -52,7 +52,7 @@ public class ToolbarClickHandler implements ClickHandler {
 		{
 			//GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
 			ZoneCreationDialog diag = new ZoneCreationDialog();
-			diag.ShowDialog(GardenAction.NEW_ZONE);
+			diag.ShowDialog(null);
 		}
 //		else if (btn.getTitle().equals("ZoneDelete"))
 //		{

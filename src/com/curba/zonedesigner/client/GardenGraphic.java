@@ -12,7 +12,12 @@ public class GardenGraphic extends DrawingArea {
 	private RegionEntity m_region;
 	private GardenTypeEntity m_gardenType;
 	private GardenEntity m_entity;
-	ArrayList<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
+	private ArrayList<ActionEntity> m_actions = new ArrayList<ActionEntity>();
+	public ArrayList<ActionEntity> getActions()
+	{
+		return m_actions;
+	}
+	private ArrayList<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
 	private int m_zoom = 0;
 	
 	private ArrayList<CropGraphic> m_CropsDeleted = new ArrayList<CropGraphic>();
@@ -394,7 +399,7 @@ public class GardenGraphic extends DrawingArea {
 			this.getZones().add(z);
 		}
 	}
-	
+		
 	@Override 
 	public String toString()
 	{

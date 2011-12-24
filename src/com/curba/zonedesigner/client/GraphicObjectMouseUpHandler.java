@@ -22,8 +22,10 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				propsZoneOrCrop(event);
 				break;
 			case PRUNE_CROP:
+				addNewAction(event, GardenDesigner.m_SelectedAction);
 				break;
 			case COLLECT_CROP:
+				addNewAction(event, GardenDesigner.m_SelectedAction);
 				break;
 			case NEW_ZONE:
 				addNewZone(event);
@@ -35,6 +37,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				propsZoneOrCrop(event);
 				break;
 			case WATERING_ZONE:
+				addNewAction(event, GardenDesigner.m_SelectedAction);
 				break;
 			case PROPS_GARDEN:
 				break;
@@ -213,9 +216,9 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				garden = c.getGarden();
 				
 				CropCreationDialog diag = new CropCreationDialog();
-				CropCreationDialog.SelectedPlant = c.getPlantEntity();
-				CropCreationDialog.NumPlants = c.getNumPlants();
-				diag.ShowDialog(GardenAction.PROPS_CROP);
+				//CropCreationDialog.SelectedPlant = c.getPlantEntity();
+				//CropCreationDialog.NumPlants = c.getNumPlants();
+				diag.ShowDialog(c);
 			}
 			//Shows the properties of a zone
 			else if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
@@ -224,12 +227,45 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				garden = z.getGarden();
 				
 				ZoneCreationDialog diag = new ZoneCreationDialog();
-				ZoneCreationDialog.Name = z.getName();
-				ZoneCreationDialog.Description = z.getDescription();
-				ZoneCreationDialog.Width = z.getWidth();
-				ZoneCreationDialog.Height = z.getHeight();
-				ZoneCreationDialog.Depth = z.getDepth();
-				diag.ShowDialog(GardenAction.PROPS_ZONE);
+				//ZoneCreationDialog.Name = z.getName();
+				//ZoneCreationDialog.Description = z.getDescription();
+				//ZoneCreationDialog.Width = z.getWidth();
+				//ZoneCreationDialog.Height = z.getHeight();
+				//ZoneCreationDialog.Depth = z.getDepth();
+				diag.ShowDialog(z);
+			}
+		}
+		catch(Exception ex)
+		{
+			Window.alert(ex.toString());
+		}
+	}
+	
+	//Does an action
+	public void addNewAction(MouseUpEvent event, GardenAction action)
+	{
+		try
+		{
+			if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
+			{
+				if (action == GardenAction.WATERING_ZONE)
+				{
+					
+				}
+			}
+			else if (event.getSource().getClass().getName() == CropGraphic.class.getName())
+			{
+				CropGraphic c = (CropGraphic)event.getSource();
+				
+				switch(action)
+				{
+				case PRUNE_CROP:
+					break;
+				case COLLECT_CROP:
+					CropCollectionDialog diag = new CropCollectionDialog(c, GardenDesigner.m_ActionTypes.get(1));
+					diag.ShowDialog();
+					break;
+				}
 			}
 		}
 		catch(Exception ex)

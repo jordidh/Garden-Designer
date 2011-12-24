@@ -15,9 +15,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ZoneCreationDialog {
 	final DialogBox dialogBox;
-	
-	private GardenAction m_actionToConfirm = GardenAction.NONE;
-	
+	private ZoneGraphic m_zone = null;
+		
 	public static String Name;
 	public static String Description;
 	public static ZoneTypeEntity SelectedZoneType = null;
@@ -97,14 +96,26 @@ public class ZoneCreationDialog {
 				
 				try
 				{
-					Name = txtName.getValue();
-					Description = txtDescription.getValue();
-					Width = Integer.parseInt(txtWidth.getValue());
-					Height = Integer.parseInt(txtHeigh.getValue());
-					Depth = Integer.parseInt(txtDepth.getValue());
-					//GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
-					GardenDesigner.m_SelectedAction = m_actionToConfirm;
-					//ResultOk = true;
+					if (m_zone != null)
+					{
+						m_zone.setName(txtName.getValue());
+						m_zone.setDescription(txtDescription.getValue());
+						m_zone.setEntityWidth(Integer.parseInt(txtWidth.getValue()));
+						m_zone.setEntityHeight(Integer.parseInt(txtHeigh.getValue()));
+						m_zone.setDepth(Integer.parseInt(txtDepth.getValue()));
+						m_zone.setZoneType(SelectedZoneType);
+						m_zone.getGarden().ReZoom(0);
+						GardenDesigner.m_SelectedAction = GardenAction.NONE;
+					}
+					else
+					{
+						Name = txtName.getValue();
+						Description = txtDescription.getValue();
+						Width = Integer.parseInt(txtWidth.getValue());
+						Height = Integer.parseInt(txtHeigh.getValue());
+						Depth = Integer.parseInt(txtDepth.getValue());
+						GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
+					}
 					dialogBox.hide();
 				}
 				catch(Exception ex)
@@ -145,24 +156,38 @@ public class ZoneCreationDialog {
 		dialogBox.setWidget(dialogVPanel);
 	}
 	
-	public void ShowDialog(GardenAction actionToConfirm){
-		m_actionToConfirm = actionToConfirm;
+	//
+	//Parameters:
+	//-z: null for a new zone, otherwise for update the zone
+	public void ShowDialog(ZoneGraphic z){
+		m_zone = z;
 		
-		txtName.setValue(Name);
-		txtDescription.setValue(Description);
-		txtWidth.setValue(Integer.toString(Width));
-		txtHeigh.setValue(Integer.toString(Height));
-		txtDepth.setValue(Integer.toString(Depth));
-		if (SelectedZoneType != null)
+		if (z != null)
 		{
-			for(int i=0; i<zoneType.getItemCount(); i++)
+			txtName.setValue(z.getName());
+			txtDescription.setValue(z.getDescription());
+			txtWidth.setValue(Integer.toString(z.getEntityWidth()));
+			txtHeigh.setValue(Integer.toString(z.getEntityHeight()));
+			txtDepth.setValue(Integer.toString(z.getDepth()));
+			if (z.getZoneType() != null)
 			{
-				if (Integer.toString(SelectedZoneType.getId()).equals(zoneType.getValue(i)))
+				for(int i=0; i<zoneType.getItemCount(); i++)
 				{
-					zoneType.setSelectedIndex(i);
-					break;
+					if (Integer.toString(z.getZoneType().getId()).equals(zoneType.getValue(i)))
+					{
+						zoneType.setSelectedIndex(i);
+						break;
+					}
 				}
 			}
+		}
+		else
+		{
+			txtName.setValue("");
+			txtDescription.setValue("");
+			txtWidth.setValue("500");
+			txtHeigh.setValue("500");
+			txtDepth.setValue("200");
 		}
 		
 		dialogBox.center();

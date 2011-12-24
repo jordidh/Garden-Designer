@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class CropCreationDialog {
 	final DialogBox dialogBox;
 	
-	private GardenAction m_actionToConfirm = GardenAction.NONE;
+	private CropGraphic m_crop = null;
 	
 	public static PlantEntity SelectedPlant = null;
 	public static int NumPlants = 1;
@@ -75,8 +75,19 @@ public class CropCreationDialog {
 				try
 				{
 					NumPlants = Integer.parseInt(txtNumPlants.getValue());
-					//GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
-					GardenDesigner.m_SelectedAction = m_actionToConfirm;
+					
+					if (m_crop != null)
+					{
+						//Update the crop
+						m_crop.setNumPlants(NumPlants);
+						m_crop.setPlantEntity(SelectedPlant);
+						GardenDesigner.m_SelectedAction = GardenAction.NONE;
+					}
+					else
+					{
+						GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
+					}
+					
 					//ResultOk = true;
 					dialogBox.hide();
 				}
@@ -110,10 +121,20 @@ public class CropCreationDialog {
 		dialogBox.setWidget(dialogVPanel);
 	}
 	
-	public void ShowDialog(GardenAction actionToConfirm){
-		m_actionToConfirm = actionToConfirm;
+	//Shows the dialog
+	//Parameters:
+	//-c: null to create a new crop, otherwise to update a crop
+	public void ShowDialog(CropGraphic c){
+		m_crop = c;
 		
-		txtNumPlants.setValue(Integer.toString(NumPlants));
+		if (c != null)
+		{
+			txtNumPlants.setValue(Integer.toString(c.getNumPlants()));
+		}
+		else
+		{
+			txtNumPlants.setValue("1");
+		}
 		
 		if (SelectedPlant != null)
 		{
