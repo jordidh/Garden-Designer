@@ -24,7 +24,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 			case PRUNE_CROP:
 				addNewAction(event, GardenDesigner.m_SelectedAction);
 				break;
-			case COLLECT_CROP:
+			case HARVEST_CROP:
 				addNewAction(event, GardenDesigner.m_SelectedAction);
 				break;
 			case NEW_ZONE:
@@ -248,9 +248,16 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 		{
 			if (event.getSource().getClass().getName() == ZoneGraphic.class.getName())
 			{
+				ZoneGraphic z = (ZoneGraphic)event.getSource();
+				
 				if (action == GardenAction.WATERING_ZONE)
 				{
-					
+					for(int i=0; i<z.getCrops().size(); i++)
+					{
+						ActionEntity a = new ActionEntity(GardenDesigner.m_ActionTypes.get(1), z.getCrops().get(i), "", 0, 0);
+						z.getGarden().getActions().add(a);
+					}
+					Window.alert("Zone watering ok: " + GardenDesigner.m_ActionTypes.get(1).getName());
 				}
 			}
 			else if (event.getSource().getClass().getName() == CropGraphic.class.getName())
@@ -260,10 +267,14 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				switch(action)
 				{
 				case PRUNE_CROP:
+					ActionEntity a = new ActionEntity(GardenDesigner.m_ActionTypes.get(2), c, "", 0, 0);
+					c.getGarden().getActions().add(a);
+					Window.alert("Prune crop ok: " + GardenDesigner.m_ActionTypes.get(2).getName());
 					break;
-				case COLLECT_CROP:
-					CropCollectionDialog diag = new CropCollectionDialog(c, GardenDesigner.m_ActionTypes.get(1));
+				case HARVEST_CROP:
+					CropHarvestDialog diag = new CropHarvestDialog(c, GardenDesigner.m_ActionTypes.get(0));
 					diag.ShowDialog();
+					Window.alert("Harvest crop ok: " + GardenDesigner.m_ActionTypes.get(0).getName());
 					break;
 				}
 			}

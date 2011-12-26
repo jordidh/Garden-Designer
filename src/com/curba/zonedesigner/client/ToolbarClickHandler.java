@@ -44,9 +44,9 @@ public class ToolbarClickHandler implements ClickHandler {
 		{
 			GardenDesigner.m_SelectedAction = GardenAction.PRUNE_CROP;
 		}
-		else if (btn.getTitle().equals("CropCollect"))
+		else if (btn.getTitle().equals("CropHarvest"))
 		{
-			GardenDesigner.m_SelectedAction = GardenAction.COLLECT_CROP;
+			GardenDesigner.m_SelectedAction = GardenAction.HARVEST_CROP;
 		}
 		else if (btn.getTitle().equals("ZoneNew"))
 		{

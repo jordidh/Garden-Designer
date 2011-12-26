@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class CropCollectionDialog {
+public class CropHarvestDialog {
 	final DialogBox dialogBox;
 	
 	private CropGraphic m_crop = null;
@@ -21,7 +21,7 @@ public class CropCollectionDialog {
 	final TextBox txtQuantityA = new TextBox();
 	final TextBox txtQuantityB = new TextBox();
 	
-	public CropCollectionDialog(CropGraphic c, ActionTypeEntity type)
+	public CropHarvestDialog(CropGraphic c, ActionTypeEntity type)
 	{
 		m_crop = c;
 		m_type = type;

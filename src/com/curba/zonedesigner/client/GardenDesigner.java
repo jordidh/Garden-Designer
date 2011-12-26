@@ -41,7 +41,7 @@ public class GardenDesigner implements EntryPoint {
 	//final Button m_btnCropDelete = new Button("Crop -");
 	//final Button m_btnCropProperties = new Button("Crop =");
 	final Button m_btnCropPrune = new Button("Crop prune");
-	final Button m_btnCropCollect = new Button("Crop collect");
+	final Button m_btnCropCollect = new Button("Crop harvest");
 		
 	//final Button m_btnZoneDelete = new Button("Zone -");
 	//final Button m_btnZoneProperties = new Button("Zone =");
@@ -149,7 +149,7 @@ public class GardenDesigner implements EntryPoint {
 		//m_btnCropProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
 		m_btnCropPrune.setTitle("CropPrune");
 		m_btnCropPrune.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnCropCollect.setTitle("CropCollect");
+		m_btnCropCollect.setTitle("CropHarvest");
 		m_btnCropCollect.addClickHandler(new ToolbarClickHandler(m_Garden));
 		m_btnZoneNew.setTitle("ZoneNew");
 		m_btnZoneNew.addClickHandler(new ToolbarClickHandler(m_Garden));
