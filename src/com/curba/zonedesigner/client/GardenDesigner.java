@@ -4,7 +4,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.core.client.JsArray;
 //import com.google.gwt.i18n.client.NumberFormat;
 
@@ -12,8 +15,11 @@ import com.google.gwt.core.client.JsArray;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class GardenDesigner implements EntryPoint {
-	private int m_width;
-	private int m_height;
+	//private int m_width;
+	//private int m_height;
+	
+	final ScrollPanel m_pnlScroll = new ScrollPanel();
+	
 	private GardenGraphic m_Garden = null;
 	public GardenGraphic getGarden()
 	{
@@ -30,22 +36,36 @@ public class GardenDesigner implements EntryPoint {
 	
 	//Garden designer controls
 	final FlowPanel m_pnlControls = new FlowPanel(); 
+	
+	//Toolbar controls
 	//final Label m_lblZoom = new Label();
+	final Image m_imgZoomOut = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgZoomIn = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgCropNew = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgZoneNew = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgCropOrZoneDelete = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgCropOrZoneProperties = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgCropPrune = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgCropHarvest = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgZoneWatering = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	final Image m_imgSave = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	
+	
 	final Button m_btnZoomOut = new Button("Zoom -");
 	final Button m_btnZoomIn = new Button("Zoom +");
 	
-	final Button m_btnCropNew = new Button("Crop +");
-	final Button m_btnZoneNew = new Button("Zone +");
+	final Button m_btnCropNew = new Button("C +");
+	final Button m_btnZoneNew = new Button("Z +");
 	final Button m_btnCropOrZoneDelete = new Button("C/Z -");
 	final Button m_btnCropOrZoneProperties = new Button("C/Z =");
 	//final Button m_btnCropDelete = new Button("Crop -");
 	//final Button m_btnCropProperties = new Button("Crop =");
-	final Button m_btnCropPrune = new Button("Crop prune");
-	final Button m_btnCropCollect = new Button("Crop harvest");
+	final Button m_btnCropPrune = new Button("C Prune");
+	final Button m_btnCropHarvest = new Button("C Harvest");
 		
 	//final Button m_btnZoneDelete = new Button("Zone -");
 	//final Button m_btnZoneProperties = new Button("Zone =");
-	final Button m_btnZoneWatering = new Button("Zone watering");
+	final Button m_btnZoneWatering = new Button("Z Watering");
 
 	//final Button m_btnGardenProperties = new Button("Garden =");
 	
@@ -110,12 +130,13 @@ public class GardenDesigner implements EntryPoint {
 			
 		//Get the sizes of the control
 		String parWidth = DOM.getElementAttribute(DOM.getElementById("ajaxGardenEditor"), "width"); 
-		if (parWidth != null) m_width = Integer.parseInt(parWidth);
-		else m_width = 200;
+		if (parWidth == null) parWidth = "600px";
 		String parHeight = DOM.getElementAttribute(DOM.getElementById("ajaxGardenEditor"), "height");
-		if (parHeight != null) m_height = Integer.parseInt(parHeight);
-		else m_height = 200;
+		if (parHeight == null) parHeight = "400px";
 
+		//m_pnlScroll.setHeight(Integer.toString(m_height));
+		//m_pnlScroll.setWidth(Integer.toString(m_width));
+		m_pnlScroll.setSize(parWidth, parHeight);
 		//Creates the GardenGraphic
 		//m_Garden = new GardenGraphic(m_width, m_height, m_Gardens.get(0));
 		m_Garden = new GardenGraphic(m_Gardens.get(0));
@@ -136,39 +157,135 @@ public class GardenDesigner implements EntryPoint {
 		//m_Garden.InitializeComponents();
 		
 		//Creates the controls of the designer
-		//m_pnlControls.setSize("500", "100");
-		m_btnCropNew.setTitle("CropNew");
+		m_imgCropNew.setAltText("CropNew");
+		m_imgCropNew.setTitle("Adds a new crop in a zone");
+		m_imgCropNew.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgCropOrZoneDelete.setAltText("CropZoneDel");
+		m_imgCropOrZoneDelete.setTitle("Deletes a zone or a crop");
+		m_imgCropOrZoneDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgCropOrZoneProperties.setAltText("CropZoneProp");
+		m_imgCropOrZoneProperties.setTitle("Shows the properties and allows modify a zone or a crop");
+		m_imgCropOrZoneProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgCropPrune.setAltText("CropPrune");
+		m_imgCropPrune.setTitle("Prunes a crop");
+		m_imgCropPrune.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgCropHarvest.setAltText("CropHarvest");
+		m_imgCropHarvest.setTitle("Harvests a crop");
+		m_imgCropHarvest.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgZoneNew.setAltText("ZoneNew");
+		m_imgZoneNew.setTitle("Adds a new zone in the garden");
+		m_imgZoneNew.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgZoneWatering.setAltText("ZoneWatering");
+		m_imgZoneWatering.setTitle("waters a zone");
+		m_imgZoneWatering.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgSave.setAltText("Save");
+		m_imgSave.setTitle("Saves the garden modifications");
+		m_imgSave.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgZoomIn.setAltText("ZoomIn");
+		m_imgZoomIn.setTitle("Zoom In");
+		m_imgZoomIn.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_imgZoomOut.setAltText("ZoomOut");
+		m_imgZoomOut.setTitle("Zoom Out");
+		m_imgZoomOut.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		m_btnCropNew.setTabIndex(0);
+		m_btnCropNew.setText("C +");
+		m_btnCropNew.setTitle("Adds a new crop in a zone");
 		m_btnCropNew.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnCropOrZoneDelete.setTitle("CropOrZoneDelete");
+		
+		m_btnCropOrZoneDelete.setTabIndex(1);
+		m_btnCropOrZoneDelete.setText("C -");
+		m_btnCropOrZoneDelete.setTitle("Deletes a zone or a crop");
 		m_btnCropOrZoneDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnCropOrZoneProperties.setTitle("CropOrZoneProps");
+		
+		m_btnCropOrZoneProperties.setTabIndex(2);
+		m_btnCropOrZoneProperties.setText("C/Z =");
+		m_btnCropOrZoneProperties.setTitle("Shows the properties and allows modify a zone or a crop");
 		m_btnCropOrZoneProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
 		//m_btnCropDelete.setTitle("CropDelete");
 		//m_btnCropDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
 		//m_btnCropProperties.setTitle("CropProps");
 		//m_btnCropProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnCropPrune.setTitle("CropPrune");
+		
+		m_btnCropPrune.setTabIndex(3);
+		m_btnCropPrune.setText("Prune");
+		m_btnCropPrune.setTitle("Prunes a crop");
 		m_btnCropPrune.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnCropCollect.setTitle("CropHarvest");
-		m_btnCropCollect.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnZoneNew.setTitle("ZoneNew");
+		
+		m_btnCropHarvest.setTabIndex(4);
+		m_btnCropHarvest.setText("Harvest");
+		m_btnCropHarvest.setTitle("Harvests a crop");
+		m_btnCropHarvest.addClickHandler(new ToolbarClickHandler(m_Garden));
+		
+		m_btnZoneNew.setTabIndex(5);
+		m_btnZoneNew.setText("Z +");
+		m_btnZoneNew.setTitle("Adds a new zone in the garden");
 		m_btnZoneNew.addClickHandler(new ToolbarClickHandler(m_Garden));
 		//m_btnZoneDelete.setTitle("ZoneDelete");
 		//m_btnZoneDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
 		//m_btnZoneProperties.setTitle("ZoneProps");
 		//m_btnZoneProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnZoneWatering.setTitle("ZoneWatering");
+		
+		m_btnZoneWatering.setTabIndex(6);
+		m_btnZoneWatering.setText("Watering");
+		m_btnZoneWatering.setTitle("waters a zone");
 		m_btnZoneWatering.addClickHandler(new ToolbarClickHandler(m_Garden));
 		//m_btnGardenProperties.setTitle("GardenProps");
 		//m_btnGardenProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnSave.setTitle("Save");
+		
+		m_btnSave.setTabIndex(7);
+		m_btnSave.setText("Save");
+		m_btnSave.setTitle("Saves the garden modifications");
 		m_btnSave.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnZoomIn.setTitle("ZoomIn");
+		
+		m_btnZoomIn.setTabIndex(8);
+		m_btnZoomIn.setText("Zoom +");
+		m_btnZoomIn.setTitle("Zoom In");
 		m_btnZoomIn.addClickHandler(new ToolbarClickHandler(m_Garden));
-		m_btnZoomOut.setTitle("ZoomOut");
+		
+		m_btnZoomOut.setTabIndex(9);
+		m_btnZoomOut.setText("Zoom -");
+		m_btnZoomOut.setTitle("Zoom Out");
 		m_btnZoomOut.addClickHandler(new ToolbarClickHandler(m_Garden));
 		
 		//Adds the controls to the panel
+		m_pnlControls.add(m_imgCropNew);
+		m_pnlControls.add(m_imgZoneNew);
+		m_pnlControls.add(m_imgCropOrZoneDelete);
+		m_pnlControls.add(m_imgCropOrZoneProperties);
+		//m_pnlControls.add(m_btnCropDelete);
+		//m_pnlControls.add(m_btnCropProperties);
+		m_pnlControls.add(m_imgCropPrune);
+		m_pnlControls.add(m_imgCropHarvest);
+		//m_pnlControls.add(m_btnZoneDelete);
+		//m_pnlControls.add(m_btnZoneProperties);
+		m_pnlControls.add(m_imgZoneWatering);
+		//m_pnlControls.add(m_btnGardenProperties);
+		m_pnlControls.add(m_imgSave);
+		m_pnlControls.add(m_imgZoomIn);
+		m_pnlControls.add(m_imgZoomOut);
+
+		
+		
 		m_pnlControls.add(m_btnCropNew);
 		m_pnlControls.add(m_btnZoneNew);
 		m_pnlControls.add(m_btnCropOrZoneDelete);
@@ -176,7 +293,7 @@ public class GardenDesigner implements EntryPoint {
 		//m_pnlControls.add(m_btnCropDelete);
 		//m_pnlControls.add(m_btnCropProperties);
 		m_pnlControls.add(m_btnCropPrune);
-		m_pnlControls.add(m_btnCropCollect);
+		m_pnlControls.add(m_btnCropHarvest);
 		//m_pnlControls.add(m_btnZoneDelete);
 		//m_pnlControls.add(m_btnZoneProperties);
 		m_pnlControls.add(m_btnZoneWatering);
@@ -184,9 +301,12 @@ public class GardenDesigner implements EntryPoint {
 		m_pnlControls.add(m_btnSave);
 		m_pnlControls.add(m_btnZoomIn);
 		m_pnlControls.add(m_btnZoomOut);
+		
 		RootPanel.get("ajaxGardenControls").add(m_pnlControls);
+
 		//Sets the control in the div named "ajaxGardenEditor"
-		RootPanel.get("ajaxGardenEditor").add(m_Garden);
+		m_pnlScroll.add(m_Garden);
+		RootPanel.get("ajaxGardenEditor").add(m_pnlScroll);
 				
 		
 		//Window.alert("Ok");
