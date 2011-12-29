@@ -49,6 +49,8 @@ public class ToolbarClickHandler implements ClickHandler {
 					break;
 				case 7:	//Save
 					GardenDesigner.m_SelectedAction = GardenAction.SAVE;
+					m_Garden.Save(GardenDesigner.UriToSave);
+					GardenDesigner.m_SelectedAction = GardenAction.NONE;
 					break;
 				case 8:	//Zoom in
 					GardenDesigner.m_SelectedAction = GardenAction.ZOOM_IN;
@@ -103,6 +105,8 @@ public class ToolbarClickHandler implements ClickHandler {
 			else if (img.getAltText().equals("Save"))
 			{
 				GardenDesigner.m_SelectedAction = GardenAction.SAVE;
+				m_Garden.Save(GardenDesigner.UriToSave);
+				GardenDesigner.m_SelectedAction = GardenAction.NONE;
 			}
 			else if (img.getAltText().equals("ZoomIn"))
 			{
@@ -126,81 +130,5 @@ public class ToolbarClickHandler implements ClickHandler {
 		{
 			Window.alert("Click handler from Object class unknown: " + event.getSource().getClass().getName());
 		}
-		
-		/*
-		if (btn.getTitle().equals("CropNew"))
-		{
-			//GardenDesigner.m_SelectedAction = GardenAction.NEW_CROP;
-			CropCreationDialog diag = new CropCreationDialog();
-			diag.ShowDialog(null);
-		}
-		else if (btn.getTitle().equals("CropOrZoneDelete"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.DELETE_CROP;
-		}
-		else if (btn.getTitle().equals("CropOrZoneProps"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.PROPS_CROP;
-		}
-//		else if (btn.getTitle().equals("CropDelete"))
-//		{
-//			GardenDesigner.m_SelectedAction = GardenAction.DELETE_CROP;
-//		}
-//		else if (btn.getTitle().equals("CropProps"))
-//		{
-//			GardenDesigner.m_SelectedAction = GardenAction.PROPS_CROP;
-//		}
-		else if (btn.getTitle().equals("CropPrune"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.PRUNE_CROP;
-		}
-		else if (btn.getTitle().equals("CropHarvest"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.HARVEST_CROP;
-		}
-		else if (btn.getTitle().equals("ZoneNew"))
-		{
-			//GardenDesigner.m_SelectedAction = GardenAction.NEW_ZONE;
-			ZoneCreationDialog diag = new ZoneCreationDialog();
-			diag.ShowDialog(null);
-		}
-//		else if (btn.getTitle().equals("ZoneDelete"))
-//		{
-//			GardenDesigner.m_SelectedAction = GardenAction.DELETE_ZONE;
-//		}
-//		else if (btn.getTitle().equals("ZoneProps"))
-//		{
-//			GardenDesigner.m_SelectedAction = GardenAction.PROPS_ZONE;
-//		}
-		else if (btn.getTitle().equals("ZoneWatering"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.WATERING_ZONE;
-		}
-//		else if (btn.getTitle().equals("GardenProps"))
-//		{
-//			GardenDesigner.m_SelectedAction = GardenAction.PROPS_GARDEN;
-//		}
-		else if (btn.getTitle().equals("Save"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.SAVE;
-		}
-		else if (btn.getTitle().equals("ZoomIn"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.ZOOM_IN;
-			m_Garden.ReZoom(1);
-			GardenDesigner.m_SelectedAction = GardenAction.NONE;
-		}
-		else if (btn.getTitle().equals("ZoomOut"))
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.ZOOM_OUT;
-			m_Garden.ReZoom(-1);
-			GardenDesigner.m_SelectedAction = GardenAction.NONE;
-		}
-		else
-		{
-			GardenDesigner.m_SelectedAction = GardenAction.NONE;
-			Window.alert(btn.getText() + ", " + btn.getTitle());
-		}
-		*/
 	}
 }

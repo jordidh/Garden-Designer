@@ -18,6 +18,8 @@ public class GardenDesigner implements EntryPoint {
 	//private int m_width;
 	//private int m_height;
 	
+	final public static String UriToSave = "http://www.hort.com/app_dev.php/gardeningapi/save/garden/ca/json";
+	
 	final ScrollPanel m_pnlScroll = new ScrollPanel();
 	
 	private GardenGraphic m_Garden = null;

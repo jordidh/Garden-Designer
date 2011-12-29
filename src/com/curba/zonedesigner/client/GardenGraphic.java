@@ -3,6 +3,12 @@ package com.curba.zonedesigner.client;
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Image;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.RequestTimeoutException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
 import java.util.List;
@@ -398,6 +404,44 @@ public class GardenGraphic extends DrawingArea {
 			
 			this.getZones().add(z);
 		}
+	}
+	
+	public void Save(String urlToSave)
+	{
+		// Construct the JSON data to send to the server
+		String jsonGarden = "";
+		String jsonZones = "";
+		String jsonCrops = "";
+		
+		String postData = "[" + jsonGarden + "," + jsonZones + "," + jsonCrops + "]";
+		
+		// Send the POST to save the garden changes		
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, urlToSave);
+	    try {
+	    	// wait 15000 milliseconds for the request to complete
+	    	builder.setTimeoutMillis(15000);
+	      
+	    	builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+	    	Request response = builder.sendRequest(postData, new RequestCallback() {
+	    		public void onError(Request request, Throwable exception) {
+	    			if (exception instanceof RequestTimeoutException) {
+	    				// handle a request timeout
+	    				Window.alert("request timeout: " + exception.getMessage());
+	    			} else {
+	    				// handle other request errors
+	    				Window.alert("error: " + exception.getMessage());
+	    			}
+	    		}
+
+	    		@Override
+	    		public void onResponseReceived(Request request, Response response) {
+	    			// TODO Auto-generated method stub
+	    			Window.alert("response received: " + response.getText());
+	    		}
+	    	});
+	    } catch (RequestException e) {
+	    	Window.alert("Failed to send the request: " + e.getMessage());
+	    }
 	}
 		
 	@Override 
