@@ -195,4 +195,28 @@ public class CropGraphic extends Image /*Rectangle*/ {
 	{
 		return this.m_plant.getName() + " (" + Integer.toString(m_pointX) + "," + Integer.toString(m_pointY) + ")";
 	}
+	
+	public String toJsonString()
+	{
+		return "{ \"id\": " + m_id + 
+	  			", \"zone_id\": " + getZone().getId() + 
+	  			//", crop_period_id: " + getCropPeriodId() + 
+	  			", \"plant_id\": " + m_plant.getId() + 
+	  			//", plant_name: \"" + getPlantName() + 
+	  			//"\", plant_description: \"" + getPlantDescription() +
+	  			//"\" +
+	  			", \"initial_real_date\": \"" + m_initialRealDate +
+	  			"\", \"initial_planned_date\": \"" + m_initialPlannedDate + 
+	  			"\", \"final_real_date\": \"" + m_finalRealDate +
+	  			"\", \"final_planned_date\": \"" + m_finalPlannedDate + 
+	  			"\", \"point_x\": " + getPointX() + 
+	  			", \"point_y\": " + getPointY() + 
+	  			", \"num_plants\": " + getNumPlants() +
+	  			//", productivity: " + getProductivity() +
+	  			//", width_spacing: " + getWidthSpacing() +
+	  			//", height_spacing: " + getHeightSpacing() +
+	  			//", soil_volume: " + getSoilVolume() +
+	  			//", deleted: " + getDeleted() +
+	  			"}";
+	}
 }

@@ -12,8 +12,8 @@ public class GardenEntity extends JavaScriptObject {
 	  public final native int getGardenTypeId() /*-{ return this.gardenTypeId; }-*/;
 	  public final native String getName() /*-{ return this.name; }-*/;
 	  public final native String getDescription() /*-{ return this.description; }-*/;
-	  public final native int getLatitude() /*-{ return this.latitude; }-*/;
-	  public final native int getLongitude() /*-{ return this.longitude; }-*/;
+	  public final native double getLatitude() /*-{ return this.latitude; }-*/;
+	  public final native double getLongitude() /*-{ return this.longitude; }-*/;
 	  public final native int getWidth() /*-{ return this.width; }-*/;
 	  public final native int getHeight() /*-{ return this.height; }-*/;
 	  
@@ -22,15 +22,15 @@ public class GardenEntity extends JavaScriptObject {
 	  
 	  public final String toJsonString()
 	  {
-		  return "{ id: " + getId() + 
-		  			", region_id: " + getRegionId() +
-		  			", garden_type_id: " + getGardenTypeId() +
-		  			", name: \"" + getName() +
-		  			"\", description: \"" + getDescription() + 
-		  			"\", latitude: " + getLatitude() + 
-		  			", longitude: " + getLongitude() + 
-		  			", width: " + getWidth() +
-		  			", height: " + getHeight() +
+		  return "{ \"id\": " + getId() + 
+		  			", \"region_id\": " + getRegionId() +
+		  			", \"garden_type_id\": " + getGardenTypeId() +
+		  			", \"name\": \"" + getName() +
+		  			"\", \"description\": \"" + getDescription() + 
+		  			"\", \"latitude\": " + getLatitude() + 
+		  			", \"longitude\": " + getLongitude() + 
+		  			", \"width\": " + getWidth() +
+		  			", \"height\": " + getHeight() +
 		  			"}";
 	  }
 

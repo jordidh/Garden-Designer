@@ -9,6 +9,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
 import java.util.List;
@@ -18,12 +19,23 @@ public class GardenGraphic extends DrawingArea {
 	private RegionEntity m_region;
 	private GardenTypeEntity m_gardenType;
 	private GardenEntity m_entity;
+	public GardenEntity getEntity()
+	{
+		return m_entity;
+	}
+	
 	private ArrayList<ActionEntity> m_actions = new ArrayList<ActionEntity>();
 	public ArrayList<ActionEntity> getActions()
 	{
 		return m_actions;
 	}
+	
 	private ArrayList<ZoneGraphic> m_zones = new ArrayList<ZoneGraphic>();
+	public List<ZoneGraphic> getZones()
+	{
+		return m_zones;
+	} 
+
 	private int m_zoom = 0;
 	
 	private ArrayList<CropGraphic> m_CropsDeleted = new ArrayList<CropGraphic>();
@@ -70,11 +82,6 @@ public class GardenGraphic extends DrawingArea {
 		m_backGround = new Image(0, 0, entity.getWidth(), entity.getHeight(), "http://www.mccallsodfarm.net/images/topsoil.jpg");
 		this.add(m_backGround);
 	}
-	
-	public List<ZoneGraphic> getZones()
-	{
-		return m_zones;
-	} 
 	
 	public void ZoomToOriginal()
 	{
@@ -408,21 +415,71 @@ public class GardenGraphic extends DrawingArea {
 	
 	public void Save(String urlToSave)
 	{
+		/*
+		String url = "http://localhost/";
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
+
+		try {
+		  Request request = builder.sendRequest(null, new RequestCallback() {
+		    public void onError(Request request, Throwable exception) {
+		       // Couldn't connect to server (could be timeout, SOP violation, etc.)
+		    	Window.alert("Couldn't connect to serve " + exception.toString());
+		    }
+		    public void onResponseReceived(Request request, Response response) {
+		      if (200 == response.getStatusCode()) {
+		          // Process the response in response.getText()
+		    	  Window.alert("Successfully " + response.getText());
+		      } else {
+		        // Handle the error.  Can get the status text from response.getStatusText()
+		    	  Window.alert("Error " + response.getStatusText() + " code=" + Integer.toString(response.getStatusCode()));
+		      }
+		    }
+		  });
+		} catch (RequestException e) {
+		  // Couldn't connect to server
+		}
+		return;
+		*/
+		
+		
+		
 		// Construct the JSON data to send to the server
-		String jsonGarden = "";
-		String jsonZones = "";
-		String jsonCrops = "";
+		String jsonGarden = this.toJsonString();
+		String jsonZones = "[";
+		String jsonCrops = "[";
+		for(int i=0; i<this.getZones().size(); i++)
+		{
+			ZoneGraphic z = this.getZones().get(i);
+			jsonZones += z.toJsonString() + ",";
+			
+			for(int j=0; j<z.getCrops().size(); j++)
+			{
+				CropGraphic c = z.getCrops().get(j);
+				jsonCrops += c.toJsonString() + ",";
+			}
+		}
+		if (jsonZones.endsWith(",")) jsonZones = jsonZones.substring(0, jsonZones.length() -1);
+		jsonZones += "]";
+		if (jsonCrops.endsWith(",")) jsonCrops = jsonCrops.substring(0, jsonCrops.length() -1);
+		jsonCrops += "]";
 		
-		String postData = "[" + jsonGarden + "," + jsonZones + "," + jsonCrops + "]";
+		String postData = URL.encode("[" + jsonGarden + "," + jsonZones + "," + jsonCrops + "]");
+		postData = postData.replaceAll(",", "%2C");
 		
-		// Send the POST to save the garden changes		
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, urlToSave);
+		//Window.alert("Post data: garden=" + postData);
+		Window.alert(postData);
+		
 	    try {
-	    	// wait 15000 milliseconds for the request to complete
-	    	builder.setTimeoutMillis(15000);
-	      
-	    	builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
-	    	Request response = builder.sendRequest(postData, new RequestCallback() {
+			// Send the POST to save the garden changes		
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, urlToSave);
+			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			// wait 15000 milliseconds for the request to complete
+			builder.setTimeoutMillis(15000);
+	    	
+			//RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "http://localhost/");
+			
+	    	//Request response = builder.sendRequest("garden=" + postData, new RequestCallback() {
+			Request response = builder.sendRequest(postData, new RequestCallback() {
 	    		public void onError(Request request, Throwable exception) {
 	    			if (exception instanceof RequestTimeoutException) {
 	    				// handle a request timeout
@@ -436,7 +493,7 @@ public class GardenGraphic extends DrawingArea {
 	    		@Override
 	    		public void onResponseReceived(Request request, Response response) {
 	    			// TODO Auto-generated method stub
-	    			Window.alert("response received: " + response.getText());
+	    			Window.alert("response received: " + response.getStatusText() + ", status code=" + Integer.toString(response.getStatusCode()) + " Data:" + response.getText());
 	    		}
 	    	});
 	    } catch (RequestException e) {
@@ -449,6 +506,9 @@ public class GardenGraphic extends DrawingArea {
 	{
 		return "[Garden (" + Integer.toString(m_entity.getWidth()) + "x" + Integer.toString(m_entity.getHeight()) + ")]";
 	}
-}
 	
-
+	public String toJsonString()
+	{
+		return m_entity.toJsonString();
+	}
+}

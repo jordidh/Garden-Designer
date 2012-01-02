@@ -200,4 +200,23 @@ public class ZoneGraphic extends Image /*DrawingArea*/ {
 		return "[Zone " + this.getName() + " (" + Integer.toString(getInitialPointX()) + "," + Integer.toString(getInitialPointY()) + ") (" +  
 				Integer.toString(getEntityWidth()) + "x" + Integer.toString(getEntityHeight()) + ")]";
 	}
+	
+	public String toJsonString()
+	{
+		return "{ \"id\": " + Integer.toString(getId()) + 
+	  			", \"garden_id\": " + Integer.toString(m_garden.getEntity().getId()) + 
+	  			", \"zone_type_id\": " + Integer.toString(getZoneType().getId()) + 
+	  			//", zone_type_name: \"" + getZoneTypeName() + 
+	  			//"\", zone_type_description: \"" + getZoneTypeDescription() +
+	  			//"\"
+	  			", \"name\": \"" + getName() +
+	  			"\", \"description\": \"" + getDescription() + 
+	  			"\", \"initial_point_x\": " + Integer.toString(getInitialPointX()) + 
+	  			", \"initial_point_y\": " + Integer.toString(getInitialPointY()) + 
+	  			", \"final_point_x\": " + Integer.toString(getInitialPointX() + getEntityWidth()) + 
+	  			", \"final_point_y\": " + Integer.toString(getInitialPointY() + getEntityHeight()) +
+	  			", \"depth\": " + Integer.toString(getDepth()) +
+	  			//", deleted: " + getDeleted() +
+	  			"}";
+	}
 }
