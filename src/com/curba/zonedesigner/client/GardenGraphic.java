@@ -467,7 +467,7 @@ public class GardenGraphic extends DrawingArea {
 		postData = postData.replaceAll(",", "%2C");
 		
 		//Window.alert("Post data: garden=" + postData);
-		Window.alert(postData);
+		//Window.alert(postData);
 		
 	    try {
 			// Send the POST to save the garden changes		
@@ -492,8 +492,15 @@ public class GardenGraphic extends DrawingArea {
 
 	    		@Override
 	    		public void onResponseReceived(Request request, Response response) {
-	    			// TODO Auto-generated method stub
-	    			Window.alert("response received: " + response.getStatusText() + ", status code=" + Integer.toString(response.getStatusCode()) + " Data:" + response.getText());
+	    			// If its 200 (OK) don't show any message 
+	    			if (response.getStatusCode() == 200)
+	    			{
+	    				Window.alert("Garden saved");
+	    			}
+	    			else
+	    			{
+	    				Window.alert("response received: " + response.getStatusText() + ", status code=" + Integer.toString(response.getStatusCode()) + " Data:" + response.getText());
+	    			}
 	    		}
 	    	});
 	    } catch (RequestException e) {

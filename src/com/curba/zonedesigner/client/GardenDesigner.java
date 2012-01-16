@@ -18,7 +18,8 @@ public class GardenDesigner implements EntryPoint {
 	//private int m_width;
 	//private int m_height;
 	
-	final public static String UriToSave = "http://www.hort.com/app_dev.php/gardeningapi/save/garden/ca/json";
+	//final public static String UriToSave = "http://www.hort.com/app_dev.php/gardeningapi/save/garden/ca/json";
+	final public static String UriToSave = "http://www.urvangreen.com/gardeningapi/save/garden/ca/json";
 	//final public static String UriToSave = "/gardeningapi/save/garden/ca/json";
 	
 	final ScrollPanel m_pnlScroll = new ScrollPanel();
@@ -42,6 +43,7 @@ public class GardenDesigner implements EntryPoint {
 	
 	//Toolbar controls
 	//final Label m_lblZoom = new Label();
+	/*
 	final Image m_imgZoomOut = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
 	final Image m_imgZoomIn = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
 	final Image m_imgCropNew = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
@@ -52,8 +54,20 @@ public class GardenDesigner implements EntryPoint {
 	final Image m_imgCropHarvest = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
 	final Image m_imgZoneWatering = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
 	final Image m_imgSave = new Image("http://www.nrinteriorismo.com/images/zoom_icon.jpg");
+	*/
 	
+	final Image m_imgZoomOut = new Image("http://www.urvangreen.com/images/zoom-.png");
+	final Image m_imgZoomIn = new Image("http://www.urvangreen.com/images/zoom+.png");
+	final Image m_imgCropNew = new Image("http://www.urvangreen.com/images/cropadd.png");
+	final Image m_imgZoneNew = new Image("http://www.urvangreen.com/images/zoneadd.png");
+	final Image m_imgCropOrZoneDelete = new Image("http://www.urvangreen.com/images/cropdel.png");
+	final Image m_imgCropOrZoneProperties = new Image("http://www.urvangreen.com/images/zonecropprops.png");
+	final Image m_imgCropPrune = new Image("http://www.urvangreen.com/images/prune.png");
+	final Image m_imgCropHarvest = new Image("http://www.urvangreen.com/images/harvest.png");
+	final Image m_imgZoneWatering = new Image("http://www.urvangreen.com/images/watering.png");
+	final Image m_imgSave = new Image("http://www.urvangreen.com/images/save.png");
 	
+	/*
 	final Button m_btnZoomOut = new Button("Zoom -");
 	final Button m_btnZoomIn = new Button("Zoom +");
 	
@@ -73,6 +87,7 @@ public class GardenDesigner implements EntryPoint {
 	//final Button m_btnGardenProperties = new Button("Garden =");
 	
 	final Button m_btnSave = new Button("Save");
+	*/
 	
 	// Convert the string of JSON into JavaScript object.
 	private final native JsArray<GardenEntity> asArrayOfGardenEntity(String json) /*-{
@@ -168,7 +183,7 @@ public class GardenDesigner implements EntryPoint {
 		m_imgCropOrZoneDelete.setTitle("Deletes a zone or a crop");
 		m_imgCropOrZoneDelete.addClickHandler(new ToolbarClickHandler(m_Garden));
 		
-		m_imgCropOrZoneProperties.setAltText("CropZoneProp");
+		m_imgCropOrZoneProperties.setAltText("CropOrZoneProp");
 		m_imgCropOrZoneProperties.setTitle("Shows the properties and allows modify a zone or a crop");
 		m_imgCropOrZoneProperties.addClickHandler(new ToolbarClickHandler(m_Garden));
 		
@@ -209,7 +224,7 @@ public class GardenDesigner implements EntryPoint {
 		
 		
 		
-		
+	/*	
 		m_btnCropNew.setTabIndex(0);
 		m_btnCropNew.setText("C +");
 		m_btnCropNew.setTitle("Adds a new crop in a zone");
@@ -269,7 +284,7 @@ public class GardenDesigner implements EntryPoint {
 		m_btnZoomOut.setText("Zoom -");
 		m_btnZoomOut.setTitle("Zoom Out");
 		m_btnZoomOut.addClickHandler(new ToolbarClickHandler(m_Garden));
-		
+		*/
 		//Adds the controls to the panel
 		m_pnlControls.add(m_imgCropNew);
 		m_pnlControls.add(m_imgZoneNew);
@@ -288,7 +303,7 @@ public class GardenDesigner implements EntryPoint {
 		m_pnlControls.add(m_imgZoomOut);
 
 		
-		
+		/*
 		m_pnlControls.add(m_btnCropNew);
 		m_pnlControls.add(m_btnZoneNew);
 		m_pnlControls.add(m_btnCropOrZoneDelete);
@@ -304,7 +319,7 @@ public class GardenDesigner implements EntryPoint {
 		m_pnlControls.add(m_btnSave);
 		m_pnlControls.add(m_btnZoomIn);
 		m_pnlControls.add(m_btnZoomOut);
-		
+		*/
 		RootPanel.get("ajaxGardenControls").add(m_pnlControls);
 
 		//Sets the control in the div named "ajaxGardenEditor"

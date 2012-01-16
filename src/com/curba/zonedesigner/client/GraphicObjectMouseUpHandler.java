@@ -79,6 +79,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 		//Get the movable object and move it
 		if (garden != null)
 		{
+			/*
 			if (garden.getSelectedGraphicObject() != null)
 			{
 				if (garden.getSelectedGraphicObject().getClass().getName() == ZoneGraphic.class.getName())
@@ -100,6 +101,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 					garden.MoveCrop(c, event.getRelativeX(garden.getElement()), event.getRelativeY(garden.getElement()));
 				}
 			}
+			*/
 			
 			garden.setSelectedGraphicObject(null);
 		}
@@ -125,7 +127,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				
 				CropGraphic c = garden.AddCrop(-1, CropCreationDialog.NumPlants, newX, newY, CropCreationDialog.SelectedPlant, z);
 				
-				Window.alert("Crop created successfully: " + c.toString());
+				//Window.alert("Crop created successfully: " + c.toString());
 			}
 		}
 		catch(Exception ex)
@@ -152,7 +154,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				ZoneGraphic z = garden.AddZone(-1, ZoneCreationDialog.Name, ZoneCreationDialog.Description, newX, newY, 
 						ZoneCreationDialog.Height, ZoneCreationDialog.Width, ZoneCreationDialog.Depth, ZoneCreationDialog.SelectedZoneType, garden);
 				
-				Window.alert("Zone created successfully: " + z.toString());
+				//Window.alert("Zone created successfully: " + z.toString());
 			}
 		}
 		catch(Exception ex)
@@ -179,7 +181,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				{
 					garden.DeleteCrop(c);
 					
-					Window.alert("Crop deleted successfully: " + c.toString());
+					//Window.alert("Crop deleted successfully: " + c.toString());
 				}
 			}
 			//Deletes a zone
@@ -192,7 +194,7 @@ public class GraphicObjectMouseUpHandler implements MouseUpHandler {
 				{					
 					garden.DeleteZone(z);
 					
-					Window.alert("Zone deleted successfully: " + z.toString());
+					//Window.alert("Zone deleted successfully: " + z.toString());
 				}
 			}
 		}
