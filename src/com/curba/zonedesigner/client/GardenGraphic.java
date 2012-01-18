@@ -79,7 +79,7 @@ public class GardenGraphic extends DrawingArea {
 		
 		m_entity = entity;
 		
-		m_backGround = new Image(0, 0, entity.getWidth(), entity.getHeight(), "http://www.mccallsodfarm.net/images/topsoil.jpg");
+		m_backGround = new Image(0, 0, entity.getWidth(), entity.getHeight(), "http://www.urvangreen.com/images/ground02.jpg");
 		this.add(m_backGround);
 	}
 	
@@ -122,6 +122,24 @@ public class GardenGraphic extends DrawingArea {
 			if (gt.getId() == gardenTypeId)
 			{
 				this.m_gardenType = gt;
+				
+				String imageToShow = "";
+				switch(gardenTypeId){
+				case 1:
+					imageToShow = "http://www.urvangreen.com/images/ground02.jpg";	//Ground
+					break;
+				case 2:
+					imageToShow = "http://www.urvangreen.com/images/balcony01.jpg";	//Balcony
+					break;
+				case 3:
+					imageToShow = "http://www.urvangreen.com/images/roof01.jpg";	//Roof
+					break;
+				default :
+					imageToShow = "http://www.urvangreen.com/images/ground01.jpg";	//Unknown
+					break;
+				}
+				m_backGround.setHref(imageToShow);
+				
 				break;
 			}
 		}
@@ -506,6 +524,39 @@ public class GardenGraphic extends DrawingArea {
 	    } catch (RequestException e) {
 	    	Window.alert("Failed to send the request: " + e.getMessage());
 	    }
+	}
+	
+	public void ZoomToFit(int width, int height)
+	{
+		int zoom = 0;
+				
+		if (getEntity().getWidth() > width)
+		{
+			if (width != 0)
+			{
+				zoom = (getEntity().getWidth() / width) + 1;
+				zoom *= -1;
+			}
+			else
+			{
+				zoom = 1;
+			}
+		}
+		else
+		{
+			if (getEntity().getWidth() != 0)
+			{
+				zoom = (width / getEntity().getWidth()) + 1;
+			}
+			else
+			{
+				zoom = 1;
+			}
+		}
+		
+		Window.alert("Size: " + Integer.toString(width) + ", " + Integer.toString(height) + " Zoom: " + Integer.toString(zoom));
+		m_zoom = zoom;
+		ReZoom(0);	
 	}
 		
 	@Override 

@@ -155,6 +155,7 @@ public class GardenDesigner implements EntryPoint {
 		//m_pnlScroll.setHeight(Integer.toString(m_height));
 		//m_pnlScroll.setWidth(Integer.toString(m_width));
 		m_pnlScroll.setSize(parWidth, parHeight);
+		
 		//Creates the GardenGraphic
 		//m_Garden = new GardenGraphic(m_width, m_height, m_Gardens.get(0));
 		m_Garden = new GardenGraphic(m_Gardens.get(0));
@@ -171,6 +172,9 @@ public class GardenDesigner implements EntryPoint {
 		//Window.alert(parZones.replace("%2C", ",").replace("&quot;", "\""));
 		
 		m_Garden.CreateZonesAndCrops(m_Plants);
+		m_Garden.ZoomToFit(
+				Integer.parseInt(parWidth.replaceAll("\\D", "")), 
+				Integer.parseInt(parHeight.replaceAll("\\D", "")));
 		
 		//m_Garden.InitializeComponents();
 		

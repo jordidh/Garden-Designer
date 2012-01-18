@@ -28,6 +28,23 @@ public class ZoneGraphic extends Image /*DrawingArea*/ {
 	void setZoneType(ZoneTypeEntity value)
 	{
 		m_zoneType = value;
+		
+		String imageToShow = "";
+		switch(value.getId()){
+		case 1:
+			imageToShow = "http://www.urvangreen.com/images/ground01.jpg";	//Ground
+			break;
+		case 2:
+			imageToShow = "http://www.urvangreen.com/images/pot01.jpg";	//Pot
+			break;
+		case 3:
+			imageToShow = "http://www.urvangreen.com/images/wood01.jpg";	//Table
+			break;
+		default :
+			imageToShow = "http://www.urvangreen.com/images/ground01.jpg";	//Unknown
+			break;
+		}
+		super.setHref(imageToShow);
 	}
 
 	List<CropGraphic> m_crops = new ArrayList<CropGraphic>();
@@ -131,7 +148,9 @@ public class ZoneGraphic extends Image /*DrawingArea*/ {
 
 	//Creates a zone that already exists in the DB
 	public ZoneGraphic(ZoneEntity entity, ZoneTypeEntity zoneType, GardenGraphic garden) {
-		super(entity.getInitialPointX(), entity.getInitialPointY(), entity.getWidth(), entity.getHeigh(), "http://upload.wikimedia.org/wikipedia/commons/a/a6/Grass_01.jpg");
+		super(entity.getInitialPointX(), entity.getInitialPointY(), entity.getWidth(), entity.getHeigh(), "http://www.urvangreen.com/images/ground01.jpg");
+
+
 		
 		m_id = entity.getId();
 		setName(entity.getName());
@@ -151,8 +170,8 @@ public class ZoneGraphic extends Image /*DrawingArea*/ {
 
 	//Creates a zone that no exists in the DB
 	public ZoneGraphic(int id, String name, String description, int x, int y, int height, int width, int depth, ZoneTypeEntity zoneType, GardenGraphic garden) {
-		super(x, y, width, height, "http://upload.wikimedia.org/wikipedia/commons/a/a6/Grass_01.jpg");
-		
+		super(x, y, width, height, "http://www.urvangreen.com/images/ground01.jpg");
+				
 		m_id = id;
 		setName(name);
 		setDescription(description);
